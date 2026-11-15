@@ -1,0 +1,100 @@
+{
+  "elapsed_s": 42.1,
+  "frames_decoded": 592,
+  "drop_packets": 0,
+  "drop_bytes": 0,
+  "drops_by_reason": {},
+  "events": 88,
+  "e2e_ms_avg": 604.7,
+  "e2e_ms_p95": 1019.7,
+  "e2e_ms_max": 1507.0,
+  "run_id": "ee36ad46",
+  "run_dir": "/workspace/ob/runs/20261115-220225-ee36ad46",
+  "frame_gaps": 48,
+  "processes": {
+    "receiver": {
+      "pid": 21569,
+      "alive": false,
+      "rc": -9
+    },
+    "gateway": {
+      "pid": 21571,
+      "alive": false,
+      "rc": -9
+    },
+    "encoder": {
+      "pid": 21573,
+      "alive": false,
+      "rc": -9
+    }
+  },
+  "pacer": {
+    "queue_bytes": 7520,
+    "max_bytes": 600000,
+    "bounded": true,
+    "bytes_in": 6463816,
+    "bytes_out": 6456296,
+    "bytes_dropped": 0,
+    "write_stall_events": 70,
+    "pipe_broken": false,
+    "alive": false
+  },
+  "relay": {
+    "fwd": {
+      "in": 9630,
+      "sent": 7007,
+      "drop_random": 149,
+      "drop_burst": 2443,
+      "drop_blackhole": 0,
+      "reordered": 335,
+      "queued": 31
+    },
+    "rev": {
+      "in": 803,
+      "sent": 640,
+      "drop_random": 21,
+      "drop_burst": 135,
+      "drop_blackhole": 0,
+      "reordered": 38,
+      "queued": 7
+    },
+    "state_bad": false,
+    "peer": "('127.0.0.1', 49146)"
+  },
+  "srt": {
+    "gateway": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "idle"
+    },
+    "receiver": {
+      "rcv_dropped_packets": 1209,
+      "rcv_drop_events": 233,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 475.255,
+      "rtt_ms": null,
+      "connection_state": "connected"
+    }
+  },
+  "impairment": {
+    "name": "severe",
+    "loss_pct": 2.0,
+    "burst_k": 12,
+    "burst_loss_pct": 25.0,
+    "reorder_pct": 5.0,
+    "reorder_delay_ms": 120,
+    "jitter_ms": 150,
+    "base_delay_ms": 0,
+    "blackhole_ms": 0,
+    "blackhole_at_ms": 0
+  },
+  "srt_latency_ms": 200,
+  "snapshots": [
+    "live.jpg"
+  ]
+}

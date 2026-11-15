@@ -1,0 +1,100 @@
+{
+  "elapsed_s": 42.0,
+  "frames_decoded": 748,
+  "drop_packets": 0,
+  "drop_bytes": 0,
+  "drops_by_reason": {},
+  "events": 8,
+  "e2e_ms_avg": 516.1,
+  "e2e_ms_p95": 681.0,
+  "e2e_ms_max": 1470.7,
+  "run_id": "8d55226e",
+  "run_dir": "/workspace/ob/runs/20261115-220101-8d55226e",
+  "frame_gaps": 0,
+  "processes": {
+    "receiver": {
+      "pid": 21258,
+      "alive": false,
+      "rc": -9
+    },
+    "gateway": {
+      "pid": 21260,
+      "alive": false,
+      "rc": -9
+    },
+    "encoder": {
+      "pid": 21262,
+      "alive": true,
+      "rc": null
+    }
+  },
+  "pacer": {
+    "queue_bytes": 7332,
+    "max_bytes": 600000,
+    "bounded": true,
+    "bytes_in": 6469456,
+    "bytes_out": 6462124,
+    "bytes_dropped": 0,
+    "write_stall_events": 74,
+    "pipe_broken": false,
+    "alive": false
+  },
+  "relay": {
+    "fwd": {
+      "in": 9825,
+      "sent": 9742,
+      "drop_random": 0,
+      "drop_burst": 0,
+      "drop_blackhole": 0,
+      "reordered": 798,
+      "queued": 83
+    },
+    "rev": {
+      "in": 864,
+      "sent": 862,
+      "drop_random": 0,
+      "drop_burst": 0,
+      "drop_blackhole": 0,
+      "reordered": 65,
+      "queued": 2
+    },
+    "state_bad": false,
+    "peer": "('127.0.0.1', 58727)"
+  },
+  "srt": {
+    "gateway": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "idle"
+    },
+    "receiver": {
+      "rcv_dropped_packets": 15,
+      "rcv_drop_events": 12,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 96.185,
+      "rtt_ms": null,
+      "connection_state": "connected"
+    }
+  },
+  "impairment": {
+    "name": "reorder",
+    "loss_pct": 0.0,
+    "burst_k": 0,
+    "burst_loss_pct": 0.0,
+    "reorder_pct": 8.0,
+    "reorder_delay_ms": 90,
+    "jitter_ms": 30,
+    "base_delay_ms": 0,
+    "blackhole_ms": 0,
+    "blackhole_at_ms": 0
+  },
+  "srt_latency_ms": 200,
+  "snapshots": [
+    "live.jpg"
+  ]
+}
