@@ -1,0 +1,63 @@
+{
+  "cases": [
+    {
+      "case": "over_budget_retransmit",
+      "profile": "short_outage",
+      "latency_ms": 250,
+      "srt_latency_us": 250000,
+      "pacer_media_s": 2.89,
+      "planned_blackhole_ms": 1200,
+      "recoverable_media_loss_ms": 250,
+      "interruptions": 0,
+      "frames": 255,
+      "loss_interval_s": 1.299,
+      "recovery_s": 0.339,
+      "largest_frame_gap_s": 1.299,
+      "evidence_errors": [],
+      "run_dir": "/workspace/ob/runs/20261116-095909-52ab6b32",
+      "failures": [],
+      "ok": true
+    },
+    {
+      "case": "short_outage_within_budget",
+      "profile": "short_outage",
+      "latency_ms": 2000,
+      "srt_latency_us": 2000000,
+      "pacer_media_s": 2.89,
+      "planned_blackhole_ms": 1200,
+      "recoverable_media_loss_ms": 2000,
+      "interruptions": 0,
+      "frames": 219,
+      "loss_interval_s": 0.237,
+      "recovery_s": 0.109,
+      "largest_frame_gap_s": 0.247,
+      "evidence_errors": [],
+      "run_dir": "/workspace/ob/runs/20261116-095931-16f08321",
+      "failures": [],
+      "ok": true
+    },
+    {
+      "case": "outage_rebuild",
+      "profile": "outage",
+      "latency_ms": 200,
+      "srt_latency_us": 200000,
+      "pacer_media_s": 2.89,
+      "planned_blackhole_ms": 15000,
+      "recoverable_media_loss_ms": 200,
+      "interruptions": 1,
+      "frames": 519,
+      "loss_interval_s": 12.528,
+      "recovery_s": 2.441,
+      "largest_frame_gap_s": 12.528,
+      "evidence_errors": [],
+      "run_dir": "/workspace/ob/runs/20261116-095950-a33c5744",
+      "failures": [],
+      "ok": true
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "failed": 0,
+    "ok": true
+  }
+}

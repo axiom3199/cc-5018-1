@@ -1,0 +1,9 @@
+connection_state,max_late_ms,max_reorder_distance,nak_events,rcv_drop_events,rcv_dropped_packets,rtt_ms,t_wall
+idle,0.0,0,0,0,0,,1794821950.2851481
+connected,0.753,0,0,1,8,,1794821951.0527318
+connected,0.81,0,0,2,9,,1794821952.248039
+connected,0.81,0,0,3,13,,1794821957.4072335
+connected,0.81,0,0,4,17,,1794821959.0467746
+connected,135.057,0,0,5,18,,1794821963.6730716
+connected,135.057,0,0,6,19,,1794821963.9030275
+connected,135.057,0,0,7,20,,1794821966.9220068

@@ -1,0 +1,502 @@
+[
+  {
+    "profile": "healthy",
+    "srt_latency_ms": 200,
+    "srt_latency_us": 200000,
+    "pacer_media_s": 2.89,
+    "recoverable_media_loss_ms": 200,
+    "bounded_queue": true,
+    "run_id": "01ef7d09",
+    "run_dir": "/workspace/ob/runs/20261116-093457-01ef7d09",
+    "video_frames_decoded": 754,
+    "audio_frames_decoded": 1408,
+    "frame_gaps": 0,
+    "e2e_ms_avg": 427.5,
+    "e2e_ms_p50": 418.7,
+    "e2e_ms_p95": 532.4,
+    "e2e_ms_max": 619.9,
+    "queue_drop_packets": 0,
+    "timeline_reset_drops": 0,
+    "session_reconnect_drops": 0,
+    "media_generations": 1,
+    "srt_late_dropped": 0,
+    "connection_events": 0,
+    "restart_events": 0,
+    "frames_in_last_third": 234,
+    "pacer_queue_peak_bytes": 22184,
+    "recovery": {
+      "loss_interval_s": null,
+      "recovery_s": null,
+      "interruptions": 0,
+      "largest_gap": {
+        "start_wall": 1794821699.5900683,
+        "end_wall": 1794821699.8387787,
+        "duration_s": 0.249,
+        "before_pts": 2.221333,
+        "after_pts": 2.261333,
+        "frames_missing_estimate": 5
+      },
+      "errors": []
+    },
+    "cpu_pct_max_by_proc": {
+      "receiver": 19.0,
+      "gateway": 3.0,
+      "encoder": 49.0
+    },
+    "rss_mb_max_by_proc": {
+      "receiver": 89.5,
+      "gateway": 29.7,
+      "encoder": 141.6
+    }
+  },
+  {
+    "profile": "jitter",
+    "srt_latency_ms": 200,
+    "srt_latency_us": 200000,
+    "pacer_media_s": 2.89,
+    "recoverable_media_loss_ms": 200,
+    "bounded_queue": true,
+    "run_id": "e29df828",
+    "run_dir": "/workspace/ob/runs/20261116-093539-e29df828",
+    "video_frames_decoded": 748,
+    "audio_frames_decoded": 1397,
+    "frame_gaps": 0,
+    "e2e_ms_avg": 708.4,
+    "e2e_ms_p50": 668.6,
+    "e2e_ms_p95": 780.8,
+    "e2e_ms_max": 1685.8,
+    "queue_drop_packets": 0,
+    "timeline_reset_drops": 0,
+    "session_reconnect_drops": 0,
+    "media_generations": 1,
+    "srt_late_dropped": 0,
+    "connection_events": 0,
+    "restart_events": 0,
+    "frames_in_last_third": 211,
+    "pacer_queue_peak_bytes": 122912,
+    "recovery": {
+      "loss_interval_s": null,
+      "recovery_s": null,
+      "interruptions": 0,
+      "largest_gap": {
+        "start_wall": 1794821750.0957727,
+        "end_wall": 1794821750.3419406,
+        "duration_s": 0.246,
+        "before_pts": 10.421333,
+        "after_pts": 10.461333,
+        "frames_missing_estimate": 5
+      },
+      "errors": []
+    },
+    "cpu_pct_max_by_proc": {
+      "receiver": 26.0,
+      "gateway": 3.0,
+      "encoder": 45.9
+    },
+    "rss_mb_max_by_proc": {
+      "receiver": 90.6,
+      "gateway": 34.0,
+      "encoder": 130.6
+    }
+  },
+  {
+    "profile": "reorder",
+    "srt_latency_ms": 200,
+    "srt_latency_us": 200000,
+    "pacer_media_s": 2.89,
+    "recoverable_media_loss_ms": 200,
+    "bounded_queue": true,
+    "run_id": "418e316e",
+    "run_dir": "/workspace/ob/runs/20261116-093621-418e316e",
+    "video_frames_decoded": 748,
+    "audio_frames_decoded": 1397,
+    "frame_gaps": 0,
+    "e2e_ms_avg": 709.6,
+    "e2e_ms_p50": 670.3,
+    "e2e_ms_p95": 782.8,
+    "e2e_ms_max": 1662.7,
+    "queue_drop_packets": 0,
+    "timeline_reset_drops": 0,
+    "session_reconnect_drops": 0,
+    "media_generations": 1,
+    "srt_late_dropped": 0,
+    "connection_events": 0,
+    "restart_events": 0,
+    "frames_in_last_third": 211,
+    "pacer_queue_peak_bytes": 121232,
+    "recovery": {
+      "loss_interval_s": null,
+      "recovery_s": null,
+      "interruptions": 0,
+      "largest_gap": {
+        "start_wall": 1794821802.0797358,
+        "end_wall": 1794821802.3523476,
+        "duration_s": 0.273,
+        "before_pts": 20.301333,
+        "after_pts": 20.341333,
+        "frames_missing_estimate": 6
+      },
+      "errors": []
+    },
+    "cpu_pct_max_by_proc": {
+      "receiver": 18.0,
+      "gateway": 4.0,
+      "encoder": 60.9
+    },
+    "rss_mb_max_by_proc": {
+      "receiver": 90.9,
+      "gateway": 34.0,
+      "encoder": 131.7
+    }
+  },
+  {
+    "profile": "burst_loss",
+    "srt_latency_ms": 200,
+    "srt_latency_us": 200000,
+    "pacer_media_s": 2.89,
+    "recoverable_media_loss_ms": 200,
+    "bounded_queue": true,
+    "run_id": "5a020654",
+    "run_dir": "/workspace/ob/runs/20261116-093703-5a020654",
+    "video_frames_decoded": 753,
+    "audio_frames_decoded": 1408,
+    "frame_gaps": 1,
+    "e2e_ms_avg": 456.9,
+    "e2e_ms_p50": 416.2,
+    "e2e_ms_p95": 529.4,
+    "e2e_ms_max": 1450.3,
+    "queue_drop_packets": 0,
+    "timeline_reset_drops": 0,
+    "session_reconnect_drops": 0,
+    "media_generations": 1,
+    "srt_late_dropped": 9,
+    "connection_events": 0,
+    "restart_events": 0,
+    "frames_in_last_third": 217,
+    "pacer_queue_peak_bytes": 11280,
+    "recovery": {
+      "loss_interval_s": null,
+      "recovery_s": null,
+      "interruptions": 0,
+      "largest_gap": {
+        "start_wall": 1794821852.0503035,
+        "end_wall": 1794821852.312669,
+        "duration_s": 0.262,
+        "before_pts": 28.501333,
+        "after_pts": 28.541333,
+        "frames_missing_estimate": 6
+      },
+      "errors": []
+    },
+    "cpu_pct_max_by_proc": {
+      "receiver": 58.7,
+      "gateway": 15.9,
+      "encoder": 179.9
+    },
+    "rss_mb_max_by_proc": {
+      "receiver": 86.3,
+      "gateway": 29.4,
+      "encoder": 137.4
+    }
+  },
+  {
+    "profile": "severe",
+    "srt_latency_ms": 200,
+    "srt_latency_us": 200000,
+    "pacer_media_s": 2.89,
+    "recoverable_media_loss_ms": 200,
+    "bounded_queue": true,
+    "run_id": "60c81b2e",
+    "run_dir": "/workspace/ob/runs/20261116-093745-60c81b2e",
+    "video_frames_decoded": 652,
+    "audio_frames_decoded": 1113,
+    "frame_gaps": 38,
+    "e2e_ms_avg": 760.2,
+    "e2e_ms_p50": 710.3,
+    "e2e_ms_p95": 924.5,
+    "e2e_ms_max": 1675.3,
+    "queue_drop_packets": 0,
+    "timeline_reset_drops": 0,
+    "session_reconnect_drops": 0,
+    "media_generations": 1,
+    "srt_late_dropped": 788,
+    "connection_events": 0,
+    "restart_events": 0,
+    "frames_in_last_third": 191,
+    "pacer_queue_peak_bytes": 122536,
+    "recovery": {
+      "loss_interval_s": null,
+      "recovery_s": null,
+      "interruptions": 0,
+      "largest_gap": {
+        "start_wall": 1794821870.8778014,
+        "end_wall": 1794821871.3942702,
+        "duration_s": 0.516,
+        "before_pts": 4.941333,
+        "after_pts": 4.981333,
+        "frames_missing_estimate": 12
+      },
+      "errors": []
+    },
+    "cpu_pct_max_by_proc": {
+      "receiver": 17.0,
+      "gateway": 3.0,
+      "encoder": 42.9
+    },
+    "rss_mb_max_by_proc": {
+      "receiver": 91.7,
+      "gateway": 34.1,
+      "encoder": 138.5
+    }
+  },
+  {
+    "profile": "outage",
+    "srt_latency_ms": 200,
+    "srt_latency_us": 200000,
+    "pacer_media_s": 2.89,
+    "recoverable_media_loss_ms": 200,
+    "bounded_queue": true,
+    "run_id": "f8ed6438",
+    "run_dir": "/workspace/ob/runs/20261116-093828-f8ed6438",
+    "video_frames_decoded": 373,
+    "audio_frames_decoded": 682,
+    "frame_gaps": 0,
+    "e2e_ms_avg": 489.4,
+    "e2e_ms_p50": 413.7,
+    "e2e_ms_p95": 530.9,
+    "e2e_ms_max": 5203.9,
+    "queue_drop_packets": 0,
+    "timeline_reset_drops": 81,
+    "session_reconnect_drops": 0,
+    "media_generations": 2,
+    "srt_late_dropped": 0,
+    "connection_events": 1,
+    "restart_events": 1,
+    "frames_in_last_third": 168,
+    "pacer_queue_peak_bytes": 15228,
+    "recovery": {
+      "loss_interval_s": 12.46,
+      "recovery_s": 2.42,
+      "interruptions": 1,
+      "largest_gap": {
+        "start_wall": 1794821921.146769,
+        "end_wall": 1794821933.6066854,
+        "duration_s": 12.46,
+        "before_pts": 8.181333,
+        "after_pts": 0.021333,
+        "frames_missing_estimate": 310
+      },
+      "errors": []
+    },
+    "cpu_pct_max_by_proc": {
+      "receiver": 14.0,
+      "gateway": 3.0,
+      "encoder": 48.0
+    },
+    "rss_mb_max_by_proc": {
+      "receiver": 90.1,
+      "gateway": 29.4,
+      "encoder": 106.6
+    }
+  },
+  {
+    "profile": "burst_loss",
+    "srt_latency_ms": 80,
+    "srt_latency_us": 80000,
+    "pacer_media_s": 2.89,
+    "recoverable_media_loss_ms": 80,
+    "bounded_queue": true,
+    "run_id": "d55ce42a",
+    "run_dir": "/workspace/ob/runs/20261116-093910-d55ce42a",
+    "video_frames_decoded": 754,
+    "audio_frames_decoded": 1408,
+    "frame_gaps": 0,
+    "e2e_ms_avg": 306.5,
+    "e2e_ms_p50": 294.8,
+    "e2e_ms_p95": 410.6,
+    "e2e_ms_max": 538.5,
+    "queue_drop_packets": 0,
+    "timeline_reset_drops": 0,
+    "session_reconnect_drops": 0,
+    "media_generations": 1,
+    "srt_late_dropped": 20,
+    "connection_events": 0,
+    "restart_events": 0,
+    "frames_in_last_third": 234,
+    "pacer_queue_peak_bytes": 8272,
+    "recovery": {
+      "loss_interval_s": null,
+      "recovery_s": null,
+      "interruptions": 0,
+      "largest_gap": {
+        "start_wall": 1794821969.180742,
+        "end_wall": 1794821969.5000684,
+        "duration_s": 0.319,
+        "before_pts": 19.141333,
+        "after_pts": 19.181333,
+        "frames_missing_estimate": 7
+      },
+      "errors": []
+    },
+    "cpu_pct_max_by_proc": {
+      "receiver": 21.0,
+      "gateway": 3.0,
+      "encoder": 55.0
+    },
+    "rss_mb_max_by_proc": {
+      "receiver": 90.9,
+      "gateway": 29.5,
+      "encoder": 142.9
+    }
+  },
+  {
+    "profile": "burst_loss",
+    "srt_latency_ms": 400,
+    "srt_latency_us": 400000,
+    "pacer_media_s": 2.89,
+    "recoverable_media_loss_ms": 400,
+    "bounded_queue": true,
+    "run_id": "46c75e6a",
+    "run_dir": "/workspace/ob/runs/20261116-093952-46c75e6a",
+    "video_frames_decoded": 754,
+    "audio_frames_decoded": 1408,
+    "frame_gaps": 0,
+    "e2e_ms_avg": 625.6,
+    "e2e_ms_p50": 617.2,
+    "e2e_ms_p95": 731.7,
+    "e2e_ms_max": 831.8,
+    "queue_drop_packets": 0,
+    "timeline_reset_drops": 0,
+    "session_reconnect_drops": 0,
+    "media_generations": 1,
+    "srt_late_dropped": 0,
+    "connection_events": 0,
+    "restart_events": 0,
+    "frames_in_last_third": 234,
+    "pacer_queue_peak_bytes": 8272,
+    "recovery": {
+      "loss_interval_s": null,
+      "recovery_s": null,
+      "interruptions": 0,
+      "largest_gap": {
+        "start_wall": 1794822006.356289,
+        "end_wall": 1794822006.603864,
+        "duration_s": 0.248,
+        "before_pts": 13.941333,
+        "after_pts": 13.981333,
+        "frames_missing_estimate": 5
+      },
+      "errors": []
+    },
+    "cpu_pct_max_by_proc": {
+      "receiver": 20.0,
+      "gateway": 3.0,
+      "encoder": 54.0
+    },
+    "rss_mb_max_by_proc": {
+      "receiver": 90.8,
+      "gateway": 29.6,
+      "encoder": 141.5
+    }
+  },
+  {
+    "profile": "burst_loss",
+    "srt_latency_ms": 800,
+    "srt_latency_us": 800000,
+    "pacer_media_s": 2.89,
+    "recoverable_media_loss_ms": 800,
+    "bounded_queue": true,
+    "run_id": "84e11bc4",
+    "run_dir": "/workspace/ob/runs/20261116-094034-84e11bc4",
+    "video_frames_decoded": 743,
+    "audio_frames_decoded": 1386,
+    "frame_gaps": 0,
+    "e2e_ms_avg": 1028.0,
+    "e2e_ms_p50": 1019.2,
+    "e2e_ms_p95": 1135.1,
+    "e2e_ms_max": 1221.1,
+    "queue_drop_packets": 0,
+    "timeline_reset_drops": 0,
+    "session_reconnect_drops": 0,
+    "media_generations": 1,
+    "srt_late_dropped": 0,
+    "connection_events": 0,
+    "restart_events": 0,
+    "frames_in_last_third": 223,
+    "pacer_queue_peak_bytes": 15040,
+    "recovery": {
+      "loss_interval_s": null,
+      "recovery_s": null,
+      "interruptions": 0,
+      "largest_gap": {
+        "start_wall": 1794822036.2701285,
+        "end_wall": 1794822036.5200493,
+        "duration_s": 0.25,
+        "before_pts": 1.301333,
+        "after_pts": 1.341333,
+        "frames_missing_estimate": 5
+      },
+      "errors": []
+    },
+    "cpu_pct_max_by_proc": {
+      "receiver": 20.0,
+      "gateway": 2.0,
+      "encoder": 47.0
+    },
+    "rss_mb_max_by_proc": {
+      "receiver": 90.8,
+      "gateway": 29.7,
+      "encoder": 144.4
+    }
+  },
+  {
+    "profile": "outage",
+    "srt_latency_ms": 200,
+    "srt_latency_us": 200000,
+    "pacer_media_s": null,
+    "recoverable_media_loss_ms": 200,
+    "bounded_queue": false,
+    "run_id": "853146fd",
+    "run_dir": "/workspace/ob/runs/20261116-094112-853146fd",
+    "video_frames_decoded": 205,
+    "audio_frames_decoded": 374,
+    "frame_gaps": 0,
+    "e2e_ms_avg": 483.7,
+    "e2e_ms_p50": 417.7,
+    "e2e_ms_p95": 531.7,
+    "e2e_ms_max": 5251.5,
+    "queue_drop_packets": 0,
+    "timeline_reset_drops": 0,
+    "session_reconnect_drops": 0,
+    "media_generations": 1,
+    "srt_late_dropped": 0,
+    "connection_events": 2,
+    "restart_events": 2,
+    "frames_in_last_third": 0,
+    "pacer_queue_peak_bytes": 3118472,
+    "recovery": {
+      "loss_interval_s": 4.914,
+      "recovery_s": 0.0,
+      "interruptions": 2,
+      "largest_gap": {
+        "start_wall": 1794822081.022778,
+        "end_wall": 1794822085.9370582,
+        "duration_s": 4.914,
+        "before_pts": 8.101333,
+        "after_pts": 8.141333,
+        "frames_missing_estimate": 122
+      },
+      "errors": []
+    },
+    "cpu_pct_max_by_proc": {
+      "receiver": 15.0,
+      "gateway": 2.0,
+      "encoder": 51.8
+    },
+    "rss_mb_max_by_proc": {
+      "receiver": 90.9,
+      "gateway": 31.5,
+      "encoder": 133.3
+    }
+  }
+]

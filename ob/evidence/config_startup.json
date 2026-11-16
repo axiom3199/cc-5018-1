@@ -1,0 +1,590 @@
+{
+  "contract": {
+    "latency": {
+      "operator_unit": "ms",
+      "srt_url_unit": "us",
+      "default_ms": 200,
+      "range_ms": [
+        20,
+        8000
+      ],
+      "conversion": "latency_us = latency_ms * 1000"
+    },
+    "pacer": {
+      "unit": "bytes of MPEG-TS (188-byte packets)",
+      "default": 600000,
+      "range": [
+        1880,
+        67108864
+      ],
+      "default_media_s_at_declared_envelope": 2.89,
+      "unbounded_is_comparison_only": true
+    },
+    "envelope": {
+      "resolution": "1280x720",
+      "fps": 25,
+      "video_bitrate": "1500k",
+      "audio_bitrate": "96k",
+      "audio_sample_rate": 48000,
+      "gop": 25
+    },
+    "ports": {
+      "srt_receiver_listener": 19001,
+      "impairment_relay_input": 19002,
+      "web_console": 8080
+    },
+    "impairment_ranges": {
+      "loss_pct": [
+        0.0,
+        100.0
+      ],
+      "burst_k": [
+        0,
+        100
+      ],
+      "burst_loss_pct": [
+        0.0,
+        95.0
+      ],
+      "reorder_pct": [
+        0.0,
+        100.0
+      ],
+      "reorder_delay_ms": [
+        0,
+        2000
+      ],
+      "jitter_ms": [
+        0,
+        2000
+      ],
+      "base_delay_ms": [
+        0,
+        5000
+      ],
+      "blackhole_ms": [
+        0,
+        3600000
+      ],
+      "blackhole_at_ms": [
+        0,
+        3600000
+      ]
+    },
+    "profiles": {
+      "healthy": {
+        "name": "healthy",
+        "loss_pct": 0.0,
+        "burst_k": 0,
+        "burst_loss_pct": 0.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 0,
+        "base_delay_ms": 0,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "jitter": {
+        "name": "jitter",
+        "loss_pct": 0.0,
+        "burst_k": 0,
+        "burst_loss_pct": 0.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 120,
+        "base_delay_ms": 20,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "reorder": {
+        "name": "reorder",
+        "loss_pct": 0.0,
+        "burst_k": 0,
+        "burst_loss_pct": 0.0,
+        "reorder_pct": 8.0,
+        "reorder_delay_ms": 90,
+        "jitter_ms": 30,
+        "base_delay_ms": 0,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "burst_loss": {
+        "name": "burst_loss",
+        "loss_pct": 1.0,
+        "burst_k": 8,
+        "burst_loss_pct": 12.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 0,
+        "base_delay_ms": 0,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "severe": {
+        "name": "severe",
+        "loss_pct": 2.0,
+        "burst_k": 12,
+        "burst_loss_pct": 25.0,
+        "reorder_pct": 5.0,
+        "reorder_delay_ms": 120,
+        "jitter_ms": 150,
+        "base_delay_ms": 0,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "outage": {
+        "name": "outage",
+        "loss_pct": 0.5,
+        "burst_k": 0,
+        "burst_loss_pct": 0.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 0,
+        "base_delay_ms": 0,
+        "blackhole_ms": 15000,
+        "blackhole_at_ms": 8000
+      },
+      "short_outage": {
+        "name": "short_outage",
+        "loss_pct": 0.0,
+        "burst_k": 0,
+        "burst_loss_pct": 0.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 0,
+        "base_delay_ms": 0,
+        "blackhole_ms": 1200,
+        "blackhole_at_ms": 4000
+      },
+      "burst_over_budget": {
+        "name": "burst_over_budget",
+        "loss_pct": 2.0,
+        "burst_k": 32,
+        "burst_loss_pct": 55.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 0,
+        "base_delay_ms": 0,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      }
+    }
+  },
+  "checks": [
+    {
+      "check": "srt_url_latency_unit",
+      "latency_ms": 20,
+      "expected_us": "20000",
+      "gateway_us": "20000",
+      "receiver_us": "20000",
+      "ok": true
+    },
+    {
+      "check": "srt_url_ports",
+      "gateway_target": "127.0.0.1:19002",
+      "receiver_bind": "0.0.0.0:19001",
+      "ok": true
+    },
+    {
+      "check": "recovery_bound_matches_budget",
+      "latency_ms": 20,
+      "recoverable_media_loss_ms": 20,
+      "ok": true
+    },
+    {
+      "check": "srt_url_latency_unit",
+      "latency_ms": 80,
+      "expected_us": "80000",
+      "gateway_us": "80000",
+      "receiver_us": "80000",
+      "ok": true
+    },
+    {
+      "check": "srt_url_ports",
+      "gateway_target": "127.0.0.1:19002",
+      "receiver_bind": "0.0.0.0:19001",
+      "ok": true
+    },
+    {
+      "check": "recovery_bound_matches_budget",
+      "latency_ms": 80,
+      "recoverable_media_loss_ms": 80,
+      "ok": true
+    },
+    {
+      "check": "srt_url_latency_unit",
+      "latency_ms": 200,
+      "expected_us": "200000",
+      "gateway_us": "200000",
+      "receiver_us": "200000",
+      "ok": true
+    },
+    {
+      "check": "srt_url_ports",
+      "gateway_target": "127.0.0.1:19002",
+      "receiver_bind": "0.0.0.0:19001",
+      "ok": true
+    },
+    {
+      "check": "recovery_bound_matches_budget",
+      "latency_ms": 200,
+      "recoverable_media_loss_ms": 200,
+      "ok": true
+    },
+    {
+      "check": "srt_url_latency_unit",
+      "latency_ms": 400,
+      "expected_us": "400000",
+      "gateway_us": "400000",
+      "receiver_us": "400000",
+      "ok": true
+    },
+    {
+      "check": "srt_url_ports",
+      "gateway_target": "127.0.0.1:19002",
+      "receiver_bind": "0.0.0.0:19001",
+      "ok": true
+    },
+    {
+      "check": "recovery_bound_matches_budget",
+      "latency_ms": 400,
+      "recoverable_media_loss_ms": 400,
+      "ok": true
+    },
+    {
+      "check": "srt_url_latency_unit",
+      "latency_ms": 800,
+      "expected_us": "800000",
+      "gateway_us": "800000",
+      "receiver_us": "800000",
+      "ok": true
+    },
+    {
+      "check": "srt_url_ports",
+      "gateway_target": "127.0.0.1:19002",
+      "receiver_bind": "0.0.0.0:19001",
+      "ok": true
+    },
+    {
+      "check": "recovery_bound_matches_budget",
+      "latency_ms": 800,
+      "recoverable_media_loss_ms": 800,
+      "ok": true
+    },
+    {
+      "check": "srt_url_latency_unit",
+      "latency_ms": 8000,
+      "expected_us": "8000000",
+      "gateway_us": "8000000",
+      "receiver_us": "8000000",
+      "ok": true
+    },
+    {
+      "check": "srt_url_ports",
+      "gateway_target": "127.0.0.1:19002",
+      "receiver_bind": "0.0.0.0:19001",
+      "ok": true
+    },
+    {
+      "check": "recovery_bound_matches_budget",
+      "latency_ms": 8000,
+      "recoverable_media_loss_ms": 8000,
+      "ok": true
+    },
+    {
+      "check": "pacer_default_media_seconds",
+      "pacer_bytes": 600000,
+      "seconds": 2.89,
+      "documented_in_readme_within_0.5s": null,
+      "ok": true
+    },
+    {
+      "check": "example_valid",
+      "name": "healthy_baseline",
+      "latency_ms": 200,
+      "pacer_bytes": 600000,
+      "profile": "healthy",
+      "ok": true
+    },
+    {
+      "check": "example_valid",
+      "name": "weak_jitter_120ms",
+      "latency_ms": 400,
+      "pacer_bytes": 600000,
+      "profile": "jitter",
+      "ok": true
+    },
+    {
+      "check": "example_valid",
+      "name": "weak_burst_loss_under_budget",
+      "latency_ms": 400,
+      "pacer_bytes": 600000,
+      "profile": "burst_loss",
+      "ok": true
+    },
+    {
+      "check": "example_valid",
+      "name": "weak_severe_over_budget",
+      "latency_ms": 200,
+      "pacer_bytes": 600000,
+      "profile": "severe",
+      "ok": true
+    },
+    {
+      "check": "example_valid",
+      "name": "short_outage_inside_budget",
+      "latency_ms": 2000,
+      "pacer_bytes": 600000,
+      "profile": "short_outage",
+      "ok": true
+    },
+    {
+      "check": "example_valid",
+      "name": "short_outage_over_budget",
+      "latency_ms": 250,
+      "pacer_bytes": 600000,
+      "profile": "short_outage",
+      "ok": true
+    },
+    {
+      "check": "example_valid",
+      "name": "long_outage_rebuild",
+      "latency_ms": 200,
+      "pacer_bytes": 600000,
+      "profile": "outage",
+      "ok": true
+    },
+    {
+      "check": "reject_invalid",
+      "name": "unknown_profile",
+      "ok": true
+    },
+    {
+      "check": "reject_invalid",
+      "name": "loss_over_100",
+      "ok": true
+    },
+    {
+      "check": "reject_invalid",
+      "name": "negative_jitter",
+      "ok": true
+    },
+    {
+      "check": "reject_invalid",
+      "name": "burst_k_negative",
+      "ok": true
+    },
+    {
+      "check": "reject_invalid",
+      "name": "unknown_knob",
+      "ok": true
+    },
+    {
+      "check": "weak_network_scenario",
+      "profile": "burst_loss",
+      "impairment": {
+        "name": "burst_loss",
+        "loss_pct": 1.0,
+        "burst_k": 8,
+        "burst_loss_pct": 12.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 0,
+        "base_delay_ms": 0,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "recoverable_media_loss_ms": 200,
+      "blackhole_note": null,
+      "ok": true
+    },
+    {
+      "check": "weak_network_scenario",
+      "profile": "burst_over_budget",
+      "impairment": {
+        "name": "burst_over_budget",
+        "loss_pct": 2.0,
+        "burst_k": 32,
+        "burst_loss_pct": 55.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 0,
+        "base_delay_ms": 0,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "recoverable_media_loss_ms": 200,
+      "blackhole_note": null,
+      "ok": true
+    },
+    {
+      "check": "weak_network_scenario",
+      "profile": "healthy",
+      "impairment": {
+        "name": "healthy",
+        "loss_pct": 0.0,
+        "burst_k": 0,
+        "burst_loss_pct": 0.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 0,
+        "base_delay_ms": 0,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "recoverable_media_loss_ms": 200,
+      "blackhole_note": null,
+      "ok": true
+    },
+    {
+      "check": "weak_network_scenario",
+      "profile": "jitter",
+      "impairment": {
+        "name": "jitter",
+        "loss_pct": 0.0,
+        "burst_k": 0,
+        "burst_loss_pct": 0.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 120,
+        "base_delay_ms": 20,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "recoverable_media_loss_ms": 200,
+      "blackhole_note": null,
+      "ok": true
+    },
+    {
+      "check": "weak_network_scenario",
+      "profile": "outage",
+      "impairment": {
+        "name": "outage",
+        "loss_pct": 0.5,
+        "burst_k": 0,
+        "burst_loss_pct": 0.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 0,
+        "base_delay_ms": 0,
+        "blackhole_ms": 15000,
+        "blackhole_at_ms": 8000
+      },
+      "recoverable_media_loss_ms": 200,
+      "blackhole_note": "blackhole at least as long as the budget: the head of the outage is unrecoverable; expect a media gap (or a session rebuild)",
+      "ok": true
+    },
+    {
+      "check": "weak_network_scenario",
+      "profile": "reorder",
+      "impairment": {
+        "name": "reorder",
+        "loss_pct": 0.0,
+        "burst_k": 0,
+        "burst_loss_pct": 0.0,
+        "reorder_pct": 8.0,
+        "reorder_delay_ms": 90,
+        "jitter_ms": 30,
+        "base_delay_ms": 0,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "recoverable_media_loss_ms": 200,
+      "blackhole_note": null,
+      "ok": true
+    },
+    {
+      "check": "weak_network_scenario",
+      "profile": "severe",
+      "impairment": {
+        "name": "severe",
+        "loss_pct": 2.0,
+        "burst_k": 12,
+        "burst_loss_pct": 25.0,
+        "reorder_pct": 5.0,
+        "reorder_delay_ms": 120,
+        "jitter_ms": 150,
+        "base_delay_ms": 0,
+        "blackhole_ms": 0,
+        "blackhole_at_ms": 0
+      },
+      "recoverable_media_loss_ms": 200,
+      "blackhole_note": null,
+      "ok": true
+    },
+    {
+      "check": "weak_network_scenario",
+      "profile": "short_outage",
+      "impairment": {
+        "name": "short_outage",
+        "loss_pct": 0.0,
+        "burst_k": 0,
+        "burst_loss_pct": 0.0,
+        "reorder_pct": 0.0,
+        "reorder_delay_ms": 0,
+        "jitter_ms": 0,
+        "base_delay_ms": 0,
+        "blackhole_ms": 1200,
+        "blackhole_at_ms": 4000
+      },
+      "recoverable_media_loss_ms": 200,
+      "blackhole_note": "blackhole at least as long as the budget: the head of the outage is unrecoverable; expect a media gap (or a session rebuild)",
+      "ok": true
+    },
+    {
+      "check": "generated_blackhole_vs_budget",
+      "latency_ms": 250,
+      "blackhole_ms": 1200,
+      "expected_recoverable": false,
+      "reported_recoverable": false,
+      "ok": true
+    },
+    {
+      "check": "generated_blackhole_vs_budget",
+      "latency_ms": 2000,
+      "blackhole_ms": 1200,
+      "expected_recoverable": true,
+      "reported_recoverable": true,
+      "ok": true
+    },
+    {
+      "check": "startup_diagnostic",
+      "profile": "healthy",
+      "run_id": "5519ffb9",
+      "run_dir": "/workspace/ob/runs/20261116-094335-5519ffb9",
+      "connected": true,
+      "processes_alive": {
+        "receiver": true,
+        "gateway": true,
+        "encoder": true
+      },
+      "connection_state": "connected",
+      "srt_latency_us": 200000,
+      "frames_decoded": 33,
+      "recovery_errors": [],
+      "ok": true
+    },
+    {
+      "check": "startup_diagnostic",
+      "profile": "burst_loss",
+      "run_id": "5feac8e9",
+      "run_dir": "/workspace/ob/runs/20261116-094350-5feac8e9",
+      "connected": true,
+      "processes_alive": {
+        "receiver": true,
+        "gateway": true,
+        "encoder": true
+      },
+      "connection_state": "connected",
+      "srt_latency_us": 200000,
+      "frames_decoded": 33,
+      "recovery_errors": [],
+      "ok": true
+    }
+  ],
+  "summary": {
+    "total": 43,
+    "failed": 0,
+    "ok": true
+  }
+}

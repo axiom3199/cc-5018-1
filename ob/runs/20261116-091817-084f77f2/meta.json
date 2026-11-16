@@ -1,0 +1,24 @@
+{
+  "run_id": "084f77f2",
+  "started_wall": 1794820697.4738696,
+  "impairment": {
+    "name": "healthy",
+    "loss_pct": 0.0,
+    "burst_k": 0,
+    "burst_loss_pct": 0.0,
+    "reorder_pct": 0.0,
+    "reorder_delay_ms": 0,
+    "jitter_ms": 0,
+    "base_delay_ms": 0,
+    "blackhole_ms": 0,
+    "blackhole_at_ms": 0
+  },
+  "srt_latency_ms": 200,
+  "srt_latency_us": 200000,
+  "pacer_bytes": 600000,
+  "resolution": "1280x720",
+  "fps": 25,
+  "video_bitrate": "1500k",
+  "audio_bitrate": "96k",
+  "stopped_wall": 1794820719.511474
+}

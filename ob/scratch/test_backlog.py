@@ -1,6 +1,6 @@
 import sys, time, ast
 sys.path.insert(0, "/workspace/ob/src")
-from ob.config import PROFILES
+from ob.contract import build_impairment
 from ob.pipeline import Pipeline
 
 def ep(r):
@@ -8,7 +8,7 @@ def ep(r):
     return e if isinstance(e, tuple) else ast.literal_eval(e)
 
 def run(unbounded):
-    pipe = Pipeline(PROFILES["outage"], 200, 600_000, duration_s=40,
+    pipe = Pipeline(build_impairment("outage"), 200, 600_000, duration_s=40,
                     unbounded=unbounded)
     pipe.start()
     try:

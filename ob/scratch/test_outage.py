@@ -1,9 +1,9 @@
 import sys, time
 sys.path.insert(0, "/workspace/ob/src")
-from ob.config import PROFILES
+from ob.contract import build_impairment
 from ob.pipeline import Pipeline
 
-pipe = Pipeline(PROFILES["outage"], 200, 600_000, duration_s=40)
+pipe = Pipeline(build_impairment("outage"), 200, 600_000, duration_s=40)
 pipe.start()
 try:
     time.sleep(34)

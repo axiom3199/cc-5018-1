@@ -133,6 +133,8 @@ class Stats:
                 "drops_by_reason": drops_by_reason,
                 "events": len(self.events),
                 "e2e_ms_avg": round(sum(lat) / len(lat), 1) if lat else None,
+                "e2e_ms_p50": round(sorted(lat)[len(lat) // 2], 1)
+                if lat else None,
                 "e2e_ms_p95": round(sorted(lat)[int(len(lat) * 0.95)], 1)
                 if lat else None,
                 "e2e_ms_max": round(max(lat), 1) if lat else None,

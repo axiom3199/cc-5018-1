@@ -1,0 +1,55 @@
+{
+  "note": "Executable return-link configuration examples. Every example is validated by bin/check_config.py against ob.contract; out-of-range values must be rejected, never defaulted.",
+  "examples": [
+    {
+      "name": "healthy_baseline",
+      "profile": "healthy",
+      "srt_latency_ms": 200,
+      "pacer_bytes": 600000,
+      "intent": "Wired baseline: no impairment. Documents the 200 ms budget -> 200000 us and 600000 B bounded queue (~2.9 s of media)."
+    },
+    {
+      "name": "weak_jitter_120ms",
+      "profile": "jitter",
+      "srt_latency_ms": 400,
+      "intent": "120 ms jitter + 20 ms base delay: budget must exceed the one-way jitter envelope so out-of-order arrivals still play."
+    },
+    {
+      "name": "weak_burst_loss_under_budget",
+      "profile": "burst_loss",
+      "srt_latency_ms": 400,
+      "intent": "Gilbert-Elliott bursts: budget covers retransmission of a burst; late-drop counter should stay low."
+    },
+    {
+      "name": "weak_severe_over_budget",
+      "profile": "severe",
+      "srt_latency_ms": 200,
+      "intent": "Deliberately under-budget: 25% bad state + 150 ms jitter. Demonstrates that loss at least as long as the budget is NOT recoverable and will show up as frame gaps / late drops."
+    },
+    {
+      "name": "short_outage_inside_budget",
+      "profile": "short_outage",
+      "srt_latency_ms": 2000,
+      "intent": "1.2 s blackhole with a 2 s budget: SRT can retransmit the withheld packets; the loss interval should stay near one retransmission window, not the full outage."
+    },
+    {
+      "name": "short_outage_over_budget",
+      "profile": "short_outage",
+      "srt_latency_ms": 250,
+      "intent": "Same 1.2 s blackhole with a 250 ms budget: most of the outage is unrecoverable; expect a visible media gap of roughly the outage length."
+    },
+    {
+      "name": "long_outage_rebuild",
+      "profile": "outage",
+      "srt_latency_ms": 200,
+      "intent": "15 s blackhole: session teardown + rebuild is expected; recovery resumes at the live edge with a visible gap. No continuity promise is made."
+    }
+  ],
+  "must_reject": [
+    {"name": "unknown_profile", "profile": "burst-los", "values": null},
+    {"name": "loss_over_100", "profile": "healthy", "values": {"loss_pct": 101}},
+    {"name": "negative_jitter", "profile": "healthy", "values": {"jitter_ms": -5}},
+    {"name": "burst_k_negative", "profile": "healthy", "values": {"burst_k": -1}},
+    {"name": "unknown_knob", "profile": "healthy", "values": {"pkt_loss": 5}}
+  ]
+}

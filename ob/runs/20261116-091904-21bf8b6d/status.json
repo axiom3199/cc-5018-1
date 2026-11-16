@@ -1,0 +1,122 @@
+{
+  "elapsed_s": 18.5,
+  "frames_decoded": 244,
+  "drop_packets": 0,
+  "drop_bytes": 0,
+  "drops_by_reason": {},
+  "events": 7,
+  "e2e_ms_avg": 1035.4,
+  "e2e_ms_p50": 1020.7,
+  "e2e_ms_p95": 1220.9,
+  "e2e_ms_max": 1230.5,
+  "run_id": "21bf8b6d",
+  "run_dir": "/workspace/ob/runs/20261116-091904-21bf8b6d",
+  "frame_gaps": 0,
+  "processes": {
+    "receiver": {
+      "pid": 2459,
+      "alive": false,
+      "rc": 255
+    },
+    "gateway": {
+      "pid": 2461,
+      "alive": false,
+      "rc": -9
+    },
+    "encoder": {
+      "pid": 2463,
+      "alive": true,
+      "rc": null
+    }
+  },
+  "pacer": {
+    "queue_bytes": 7144,
+    "max_bytes": 600000,
+    "bounded": true,
+    "bytes_in": 2254308,
+    "bytes_out": 2247164,
+    "bytes_dropped": 0,
+    "write_stall_events": 0,
+    "pipe_broken": false,
+    "alive": false
+  },
+  "relay": {
+    "fwd": {
+      "in": 1897,
+      "sent": 1897,
+      "drop_random": 0,
+      "drop_burst": 0,
+      "drop_blackhole": 0,
+      "reordered": 0,
+      "queued": 0
+    },
+    "rev": {
+      "in": 75,
+      "sent": 75,
+      "drop_random": 0,
+      "drop_burst": 0,
+      "drop_blackhole": 0,
+      "reordered": 0,
+      "queued": 0
+    },
+    "state_bad": false,
+    "peer": "('127.0.0.1', 54577)"
+  },
+  "srt": {
+    "gateway": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "idle"
+    },
+    "receiver": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "connected"
+    }
+  },
+  "impairment": {
+    "name": "healthy",
+    "loss_pct": 0.0,
+    "burst_k": 0,
+    "burst_loss_pct": 0.0,
+    "reorder_pct": 0.0,
+    "reorder_delay_ms": 0,
+    "jitter_ms": 0,
+    "base_delay_ms": 0,
+    "blackhole_ms": 0,
+    "blackhole_at_ms": 0
+  },
+  "srt_latency_ms": 800,
+  "srt_latency_us": 800000,
+  "recovery": {
+    "frames": 244,
+    "first_frame_wall": 1794820745.6275985,
+    "last_frame_wall": 1794820754.615375,
+    "largest_gap": {
+      "start_wall": 1794820750.3360927,
+      "end_wall": 1794820750.5792456,
+      "duration_s": 0.243,
+      "before_pts": 5.501333,
+      "after_pts": 5.541333,
+      "frames_missing_estimate": 5
+    },
+    "interruptions": 0,
+    "timeline_resets": 0,
+    "planned_outage": null,
+    "recovery_s": null,
+    "recovery_from_outage_end_s": null,
+    "loss_interval_s": null,
+    "errors": []
+  },
+  "snapshots": [
+    "live.jpg"
+  ]
+}

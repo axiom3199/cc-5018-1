@@ -7,12 +7,12 @@ that fail are surfaced back into the result area as kernel-reported errors.
 """
 import json
 import threading
-import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from urllib.parse import urlparse, parse_qs
-
 from . import config
-from .config import PROFILES, Impairment
+from .contract import (ContractError, build_impairment, recovery_contract,
+                       validate_session)
 from .pipeline import Pipeline
 
 
@@ -29,28 +29,31 @@ class Controller:
         with self.lock:
             if self.is_running():
                 return False, "session already running"
-            profile = params.get("profile", "healthy")
-            imp = PROFILES.get(profile, Impairment(profile))
-            # optional numeric overrides
-            for key in ("loss_pct", "jitter_ms", "reorder_pct",
-                        "reorder_delay_ms", "burst_k", "burst_loss_pct",
-                        "base_delay_ms", "blackhole_ms", "blackhole_at_ms"):
-                if params.get(key) not in (None, ""):
-                    setattr(imp, key, float(params[key])
-                            if "pct" in key or "delay_ms" in key
-                            or "jitter" in key or "blackhole" in key
-                            else int(float(params[key])))
-            latency = int(params.get("srt_latency_ms",
-                                     config.SRT_LATENCY_US // 1000))
-            pacer_bytes = int(params.get("pacer_bytes",
-                                         config.PACER_BYTES_DEFAULT))
             unbounded = params.get("unbounded") in ("1", "true", "on")
+            try:
+                # profile name is validated, not defaulted: a typo must fail
+                imp = build_impairment(params.get("profile", "healthy"), {
+                    k: params.get(k) for k in (
+                        "loss_pct", "jitter_ms", "reorder_pct",
+                        "reorder_delay_ms", "burst_k", "burst_loss_pct",
+                        "base_delay_ms", "blackhole_ms", "blackhole_at_ms")})
+                latency, pacer_bytes = validate_session(
+                    params.get("srt_latency_ms", config.SRT_LATENCY_MS_DEFAULT),
+                    params.get("pacer_bytes", config.PACER_BYTES_DEFAULT),
+                    unbounded)
+            except ContractError as exc:
+                self.last_error = str(exc)
+                return False, self.last_error
             try:
                 self.pipe = Pipeline(imp, latency, pacer_bytes,
                                      duration_s=0, unbounded=unbounded)
                 self.pipe.start()
                 self.last_error = None
-                return True, self.pipe.run_id
+                return True, {
+                    "run_id": self.pipe.run_id,
+                    "contract": recovery_contract(
+                        latency, pacer_bytes, imp, unbounded),
+                }
             except Exception as exc:  # surface kernel failure to the page
                 self.last_error = repr(exc)
                 self.pipe = None
@@ -70,17 +73,17 @@ class Controller:
         with self.lock:
             if not self.is_running():
                 return False, "no running session"
-            profile = params.get("profile", "custom")
-            imp = PROFILES.get(profile, Impairment(profile))
-            for key in ("loss_pct", "jitter_ms", "reorder_pct",
+            try:
+                imp = build_impairment(
+                    params.get("profile", "custom"),
+                    {k: params.get(k) for k in (
+                        "loss_pct", "jitter_ms", "reorder_pct",
                         "reorder_delay_ms", "burst_k", "burst_loss_pct",
-                        "base_delay_ms", "blackhole_ms", "blackhole_at_ms"):
-                if params.get(key) not in (None, ""):
-                    val = float(params[key])
-                    setattr(imp, key, int(val) if key in
-                            ("jitter_ms", "reorder_delay_ms", "burst_k",
-                             "base_delay_ms", "blackhole_ms",
-                             "blackhole_at_ms") else val)
+                        "base_delay_ms", "blackhole_ms", "blackhole_at_ms")},
+                    base=self.pipe.imp)
+            except ContractError as exc:
+                self.last_error = str(exc)
+                return False, self.last_error
             try:
                 self.pipe.update_impairment(imp)
                 return True, imp.to_dict()
@@ -139,6 +142,7 @@ img{width:100%;border:1px solid #30363d;border-radius:8px;background:#000}
    <select id="profile">
     <option>healthy</option><option>jitter</option><option>reorder</option>
     <option>burst_loss</option><option>severe</option><option>outage</option>
+    <option>short_outage</option><option>burst_over_budget</option>
    </select>
    <div class="row"><div><label>随机丢包 %</label><input id="loss_pct" type="number" step="0.5" placeholder="0"></div>
    <div><label>抖动 ms</label><input id="jitter_ms" type="number" placeholder="0"></div></div>
@@ -149,6 +153,7 @@ img{width:100%;border:1px solid #30363d;border-radius:8px;background:#000}
    <button class="stop" onclick="cmd('stop')" id="btnstop" disabled>停止</button>
    <button class="sec" onclick="cmd('apply')" id="btnapply" disabled>热更新损伤</button>
    <button class="sec" onclick="cmd('reset')" id="btnreset" disabled>时间轴中断/重置</button>
+   <div class="muted" id="contract" style="margin-top:10px"></div>
   </div>
   <div class="card"><h3>结果与失败反馈</h3><div id="msg" class="muted">未启动</div></div>
  </div>
@@ -157,7 +162,7 @@ img{width:100%;border:1px solid #30363d;border-radius:8px;background:#000}
    <div class="kpi">
     <div><b id="k_decoded">–</b><span>已解码视频帧</span></div>
     <div><b id="k_e2e">–</b><span>端到端延迟 p50(ms)</span></div>
-    <div><b id="k_drop">–</b><span>有界队列丢弃 TS 包</span></div>
+    <div><b id="k_drop">–</b><span>队列丢弃 TS 包（溢出/合计）</span></div>
     <div><b id="k_srtdrop">–</b><span>SRT 晚到丢包</span></div>
    </div>
    <div class="kpi" style="margin-top:10px">
@@ -166,10 +171,18 @@ img{width:100%;border:1px solid #30363d;border-radius:8px;background:#000}
     <div><b id="k_burst">–</b><span>中继突发丢包</span></div>
     <div><b id="k_state">–</b><span>SRT 连接状态</span></div>
    </div>
+   <div class="kpi" style="margin-top:10px">
+    <div><b id="k_recovery">–</b><span>恢复耗时(实测 s)</span></div>
+    <div><b id="k_lossint">–</b><span>丢失区间(实测 s)</span></div>
+    <div><b id="k_gapdur">–</b><span>最大画面中断(实测 s)</span></div>
+    <div><b id="k_budget">–</b><span>可重传丢失上限(ms)</span></div>
+   </div>
+   <div class="err" id="recovery_err"></div>
   </div>
   <div class="card">
    <h3>演播室接收画面（烧录帧号/时间码）</h3>
    <img id="snap" alt="等待接收画面…">
+   <div class="muted" id="snapmeta">尚无接收画面</div>
   </div>
   <div class="card"><h3>内核状态</h3><table id="tbl"><tbody></tbody></table></div>
  </div>
@@ -185,6 +198,12 @@ async function cmd(action){
  const j=await r.json();
  $('msg').innerHTML='<span class="'+(j.ok?'ok':'bad')+' pill">'+action+': '+
    (j.ok?'OK':'失败')+'</span> <pre class="err">'+JSON.stringify(j.detail??j)+'</pre>';
+ if(j.ok && action==='start' && j.detail && j.detail.contract){
+   const c=j.detail.contract;
+   $('contract').textContent='延迟预算 '+c.srt_latency_ms+' ms（'+c.srt_latency_us+
+     ' us 下发 libsrt）；有界队列 '+(c.pacer_bytes||0)+' B ≈ '+c.pacer_media_s+
+     ' s 媒体；连续丢失 ≥ '+c.recoverable_media_loss_ms+' ms 不可由重传修复。';
+ }
  poll();
 }
 async function poll(){
@@ -195,18 +214,34 @@ async function poll(){
  $('runid').textContent=j.run_id?('run '+j.run_id):'';
  if(run){
    $('k_decoded').textContent=j.frames_decoded;
-   $('k_e2e').textContent=j.e2e_ms_avg??'–';
-   $('k_drop').textContent=j.drop_packets;
+   $('k_e2e').textContent=j.e2e_ms_p50??'–';
+   const dbr=j.drops_by_reason||{};
+   $('k_drop').textContent=(dbr.queue_overflow??0)+' / '+(j.drop_packets??0);
    $('k_srtdrop').textContent=(j.srt&&j.srt.receiver&&j.srt.receiver.rcv_dropped_packets)??'–';
    $('k_gap').textContent=j.frame_gaps??'–';
    $('k_q').textContent=j.pacer?j.pacer.queue_bytes:'–';
    $('k_burst').textContent=j.relay?(j.relay.fwd.drop_burst+j.relay.fwd.drop_random):'–';
    $('k_state').textContent=(j.srt&&j.srt.receiver&&j.srt.receiver.connection_state)||'–';
-   if(j.snapshots&&j.snapshots.length)$('snap').src='/snapshot?run='+encodeURIComponent(j.run_dir)+'&t='+Date.now();
+   const rec=j.recovery||{};
+   $('k_recovery').textContent=rec.recovery_s??'–';
+   $('k_lossint').textContent=rec.loss_interval_s??'–';
+   $('k_gapdur').textContent=rec.largest_gap?rec.largest_gap.duration_s:'–';
+   $('k_budget').textContent=j.srt_latency_ms??'–';
+   $('recovery_err').textContent=(rec.errors&&rec.errors.length)?
+     ('内核证据异常：'+rec.errors.join('；')):'';
+   if(j.snapshots&&j.snapshots.length){
+     $('snap').src='/snapshot?run='+encodeURIComponent(j.run_dir)+'&t='+Date.now();
+     $('snapmeta').textContent='画面来自本次运行 '+j.run_id+'；已解码 '+j.frames_decoded+
+       ' 帧，端到端 p50 '+($('k_e2e').textContent)+' ms。';
+   } else {
+     $('snapmeta').textContent='尚无接收画面（等待解码首帧）';
+   }
    const rows=[['run_id',j.run_id],['SRT 延迟预算(ms)',j.srt_latency_ms],
+     ['SRT 下发 latency(us)',j.srt_latency_us],
      ['e2e p95(ms)',j.e2e_ms_p95],['e2e max(ms)',j.e2e_ms_max],
      ['队列丢弃(bytes)',j.pacer?j.pacer.bytes_dropped:'–'],
      ['写阻塞次数',j.pacer?j.pacer.write_stall_events:'–'],
+     ['停用画面陈旧',j.snapshots&&j.snapshots.length?'否':'是'],
      ['中断/事件数',j.events],['产物目录',j.run_dir]];
    $('tbl').innerHTML=rows.map(r=>'<tr><th>'+r[0]+'</th><td>'+r[1]+'</td></tr>').join('');
  }
@@ -239,8 +274,16 @@ class _Handler(BaseHTTPRequestHandler):
         elif url.path == "/snapshot":
             q = parse_qs(url.query)
             run_dir = q.get("run", [""])[0]
-            pic = __import__("pathlib").Path(run_dir) / "snapshots" / "live.jpg"
-            if pic.exists():
+            # only serve snapshots that live under the runs directory; the
+            # run path comes from the query string and must not be a way to
+            # read arbitrary files
+            try:
+                pic = (config.RUNS_DIR / Path(run_dir).name
+                       / "snapshots" / "live.jpg").resolve()
+                allowed = pic.is_relative_to(config.RUNS_DIR.resolve())
+            except (OSError, ValueError):
+                allowed = False
+            if allowed and pic.exists():
                 self._send(200, "image/jpeg", pic.read_bytes())
             else:
                 self._send(404, "text/plain", b"no snapshot yet")

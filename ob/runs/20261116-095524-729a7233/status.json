@@ -1,0 +1,139 @@
+{
+  "elapsed_s": 22.0,
+  "frames_decoded": 241,
+  "drop_packets": 0,
+  "drop_bytes": 0,
+  "drops_by_reason": {},
+  "events": 9,
+  "e2e_ms_avg": 528.3,
+  "e2e_ms_p50": 499.2,
+  "e2e_ms_p95": 803.3,
+  "e2e_ms_max": 1860.6,
+  "run_id": "729a7233",
+  "run_dir": "/workspace/ob/runs/20261116-095524-729a7233",
+  "frame_gaps": 1,
+  "processes": {
+    "receiver": {
+      "pid": 8904,
+      "alive": false,
+      "rc": -9
+    },
+    "gateway": {
+      "pid": 8906,
+      "alive": false,
+      "rc": -9
+    },
+    "encoder": {
+      "pid": 8908,
+      "alive": false,
+      "rc": -9
+    }
+  },
+  "pacer": {
+    "queue_bytes": 7708,
+    "max_bytes": 600000,
+    "bounded": true,
+    "bytes_in": 2253932,
+    "bytes_out": 2246224,
+    "bytes_dropped": 0,
+    "write_stall_events": 0,
+    "pipe_broken": false,
+    "alive": false
+  },
+  "relay": {
+    "fwd": {
+      "in": 2049,
+      "sent": 1845,
+      "drop_random": 0,
+      "drop_burst": 0,
+      "drop_blackhole": 204,
+      "reordered": 0,
+      "queued": 0
+    },
+    "rev": {
+      "in": 69,
+      "sent": 68,
+      "drop_random": 0,
+      "drop_burst": 0,
+      "drop_blackhole": 1,
+      "reordered": 0,
+      "queued": 0
+    },
+    "state_bad": false,
+    "peer": "('127.0.0.1', 33384)"
+  },
+  "srt": {
+    "gateway": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "idle"
+    },
+    "receiver": {
+      "rcv_dropped_packets": 45,
+      "rcv_drop_events": 1,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 1020.642,
+      "rtt_ms": null,
+      "connection_state": "connected"
+    }
+  },
+  "impairment": {
+    "name": "short_outage",
+    "loss_pct": 0.0,
+    "burst_k": 0,
+    "burst_loss_pct": 0.0,
+    "reorder_pct": 0.0,
+    "reorder_delay_ms": 0,
+    "jitter_ms": 0,
+    "base_delay_ms": 0,
+    "blackhole_ms": 1200,
+    "blackhole_at_ms": 4000
+  },
+  "srt_latency_ms": 250,
+  "srt_latency_us": 250000,
+  "contract": {
+    "srt_latency_ms": 250,
+    "srt_latency_us": 250000,
+    "pacer_bytes": 600000,
+    "pacer_media_s": 2.89,
+    "recoverable_media_loss_ms": 250,
+    "rebuild_required_when_loss_exceeds_ms": 250,
+    "unrecoverable_loss": "Any contiguous loss interval >= the SRT latency budget cannot be repaired by retransmission: the retransmitted packets miss their TSBPD deadline and are dropped (RCV-DROPPED). A loss interval >= the session watchdog/keepalive horizon tears the session down; the rebuild resumes at the live edge and the outage itself remains a visible media gap. Buffers cannot promise continuity. Media older than the bounded queue is deleted at the sender, so it cannot be retransmitted at any budget.",
+    "retransmit_source_window_ms": 2891,
+    "planned_blackhole_ms": 1200,
+    "planned_blackhole_recoverable": false,
+    "planned_blackhole_note": "blackhole at least as long as the budget: the head of the outage is unrecoverable; expect a media gap (or a session rebuild)"
+  },
+  "recovery": {
+    "frames": 241,
+    "first_frame_wall": 1794822925.6113183,
+    "last_frame_wall": 1794822935.0476413,
+    "largest_gap": {
+      "start_wall": 1794822929.1258838,
+      "end_wall": 1794822930.6342049,
+      "duration_s": 1.508,
+      "before_pts": 4.301333,
+      "after_pts": 4.341333,
+      "frames_missing_estimate": 37
+    },
+    "interruptions": 0,
+    "timeline_resets": 0,
+    "planned_outage": {
+      "start_wall": 1794822928.8904397,
+      "end_wall": 1794822930.0904398,
+      "duration_s": 1.2
+    },
+    "recovery_reference": 1794822930.0904398,
+    "recovery_s": 0.544,
+    "loss_interval_s": 1.508,
+    "errors": []
+  },
+  "snapshots": [
+    "live.jpg"
+  ]
+}

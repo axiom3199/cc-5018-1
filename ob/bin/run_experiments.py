@@ -19,16 +19,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ob import config
-from ob.config import PROFILES
+from ob.contract import build_impairment, recovery_contract
 from ob.pipeline import Pipeline
 from ob.frameparse import join_latency
 
 
 def run_one(profile_name, duration, srt_latency, unbounded=False,
             pacer_bytes=config.PACER_BYTES_DEFAULT):
-    imp = PROFILES[profile_name]
+    imp = build_impairment(profile_name)
     pipe = Pipeline(imp, srt_latency, pacer_bytes, duration_s=duration,
                     unbounded=unbounded)
+    facts = recovery_contract(srt_latency, pacer_bytes, imp, unbounded)
     pipe.start()
     try:
         time.sleep(duration)
@@ -48,6 +49,9 @@ def run_one(profile_name, duration, srt_latency, unbounded=False,
     res = {
         "profile": profile_name,
         "srt_latency_ms": srt_latency,
+        "srt_latency_us": srt_latency * 1000,
+        "pacer_media_s": facts["pacer_media_s"],
+        "recoverable_media_loss_ms": facts["recoverable_media_loss_ms"],
         "bounded_queue": not unbounded,
         "run_id": pipe.run_id,
         "run_dir": str(pipe.run_dir),
@@ -86,6 +90,12 @@ def run_one(profile_name, duration, srt_latency, unbounded=False,
     res["pacer_queue_peak_bytes"] = max(
         (s.get("pacer_queue_bytes", 0) for s in pipe.stats.series),
         default=0)
+    # measured recovery / loss interval from the same evidence the page shows
+    status = pipe.status()
+    res["recovery"] = {
+        k: status["recovery"][k] for k in (
+            "loss_interval_s", "recovery_s", "interruptions",
+            "largest_gap", "errors")}
     # resource envelope from /proc samples
     rsrc = pipe.stats.resources
     if rsrc:
