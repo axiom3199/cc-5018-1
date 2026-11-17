@@ -1,3 +1,0 @@
-connection_state,max_late_ms,max_reorder_distance,nak_events,rcv_drop_events,rcv_dropped_packets,rtt_ms,t_wall
-idle,0.0,0,0,0,0,,1794821210.403194
-connected,0.0,0,0,0,0,,1794821215.6586003

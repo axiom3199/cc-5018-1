@@ -1,0 +1,197 @@
+{
+  "elapsed_s": 42.3,
+  "frames_decoded": 424,
+  "drop_packets": 529,
+  "drop_bytes": 99452,
+  "drops_by_reason": {
+    "timeline_reset": 111,
+    "session_reconnect": 418
+  },
+  "events": 22,
+  "e2e_ms_avg": 598.7,
+  "e2e_ms_p50": 585.4,
+  "e2e_ms_p95": 890.2,
+  "e2e_ms_max": 5220.8,
+  "run_id": "0781daee",
+  "run_dir": "/workspace/ob/runs/20261117-040506-0781daee",
+  "frame_gaps": 0,
+  "processes": {
+    "receiver": {
+      "pid": 15014,
+      "alive": false,
+      "rc": 255
+    },
+    "gateway": {
+      "pid": 15021,
+      "alive": false,
+      "rc": -9
+    },
+    "encoder": {
+      "pid": 15012,
+      "alive": true,
+      "rc": null
+    }
+  },
+  "pacer": {
+    "queue_bytes": 14100,
+    "max_bytes": 600000,
+    "bounded": true,
+    "bytes_in": 5105516,
+    "bytes_out": 4991964,
+    "bytes_dropped": 99452,
+    "write_stall_events": 0,
+    "pipe_broken": false,
+    "alive": false
+  },
+  "relay": {
+    "fwd": {
+      "in": 4070,
+      "sent": 3195,
+      "drop_random": 17,
+      "drop_burst": 0,
+      "drop_blackhole": 858,
+      "reordered": 0,
+      "queued": 0
+    },
+    "rev": {
+      "in": 163,
+      "sent": 156,
+      "drop_random": 1,
+      "drop_burst": 0,
+      "drop_blackhole": 6,
+      "reordered": 0,
+      "queued": 0
+    },
+    "state_bad": false,
+    "peer": "('127.0.0.1', 54043)"
+  },
+  "srt": {
+    "gateway": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "idle"
+    },
+    "receiver": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "connected"
+    }
+  },
+  "impairment": {
+    "name": "outage",
+    "loss_pct": 0.5,
+    "burst_k": 0,
+    "burst_loss_pct": 0.0,
+    "reorder_pct": 0.0,
+    "reorder_delay_ms": 0,
+    "jitter_ms": 0,
+    "base_delay_ms": 0,
+    "blackhole_ms": 15000,
+    "blackhole_at_ms": 8000
+  },
+  "srt_latency_ms": 200,
+  "srt_latency_us": 200000,
+  "loss_intervals": [
+    {
+      "start_wall": 1794888311.6741395,
+      "end_wall": 1794888312.1609051,
+      "duration_s": 0.487,
+      "missing_frames": 0,
+      "media_skipped_s": 0.0,
+      "from_elapsed": 5.345,
+      "to_elapsed": 5.832,
+      "from_epoch": [
+        "0781daee",
+        0
+      ],
+      "to_epoch": [
+        "0781daee",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794888314.4677112,
+      "end_wall": 1794888319.3926232,
+      "duration_s": 4.925,
+      "missing_frames": 0,
+      "media_skipped_s": 0.0,
+      "from_elapsed": 8.139,
+      "to_elapsed": 13.064,
+      "from_epoch": [
+        "0781daee",
+        0
+      ],
+      "to_epoch": [
+        "0781daee",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794888319.395973,
+      "end_wall": 1794888332.419472,
+      "duration_s": 13.023,
+      "missing_frames": null,
+      "media_skipped_s": null,
+      "from_elapsed": 13.067,
+      "to_elapsed": 26.088,
+      "from_epoch": [
+        "0781daee",
+        0
+      ],
+      "to_epoch": [
+        "0781daee",
+        1
+      ],
+      "missing_frames_estimate": 325
+    },
+    {
+      "start_wall": 1794888335.4345517,
+      "end_wall": 1794888335.8757122,
+      "duration_s": 0.441,
+      "missing_frames": 0,
+      "media_skipped_s": 0.0,
+      "from_elapsed": 29.103,
+      "to_elapsed": 29.544,
+      "from_epoch": [
+        "0781daee",
+        1
+      ],
+      "to_epoch": [
+        "0781daee",
+        1
+      ]
+    }
+  ],
+  "recoveries": [
+    {
+      "index": 0,
+      "interruption_elapsed": 13.19,
+      "session_restored_elapsed": 25.568,
+      "session_restore_s": 12.378,
+      "first_frame_elapsed": 26.088,
+      "picture_recovery_s": 12.862,
+      "loss_interval_s": 13.023,
+      "from_epoch": [
+        "0781daee",
+        0
+      ],
+      "to_epoch": [
+        "0781daee",
+        1
+      ],
+      "media_generation_before": 0,
+      "media_generation_after": 1
+    }
+  ],
+  "snapshots": [
+    "live.jpg"
+  ]
+}

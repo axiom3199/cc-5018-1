@@ -1,0 +1,104 @@
+{
+  "elapsed_s": 20.0,
+  "frames_decoded": 201,
+  "drop_packets": 0,
+  "drop_bytes": 0,
+  "drops_by_reason": {},
+  "events": 18,
+  "e2e_ms_avg": 720.3,
+  "e2e_ms_p50": 570.6,
+  "e2e_ms_p95": 1768.7,
+  "e2e_ms_max": 1778.5,
+  "run_id": "fd81a373",
+  "run_dir": "/workspace/ob/runs/20261117-040010-fd81a373",
+  "frame_gaps": 1,
+  "processes": {
+    "receiver": {
+      "pid": 13559,
+      "alive": false,
+      "rc": -9
+    },
+    "gateway": {
+      "pid": 13561,
+      "alive": false,
+      "rc": -9
+    },
+    "encoder": {
+      "pid": 13563,
+      "alive": true,
+      "rc": null
+    }
+  },
+  "pacer": {
+    "queue_bytes": 8084,
+    "max_bytes": 600000,
+    "bounded": true,
+    "bytes_in": 1835820,
+    "bytes_out": 1827736,
+    "bytes_dropped": 0,
+    "write_stall_events": 96,
+    "pipe_broken": false,
+    "alive": false
+  },
+  "relay": {
+    "fwd": {
+      "in": 2940,
+      "sent": 2813,
+      "drop_random": 0,
+      "drop_burst": 0,
+      "drop_blackhole": 0,
+      "reordered": 0,
+      "queued": 127
+    },
+    "rev": {
+      "in": 266,
+      "sent": 260,
+      "drop_random": 0,
+      "drop_burst": 0,
+      "drop_blackhole": 0,
+      "reordered": 0,
+      "queued": 6
+    },
+    "state_bad": false,
+    "peer": "('127.0.0.1', 46149)"
+  },
+  "srt": {
+    "gateway": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "idle"
+    },
+    "receiver": {
+      "rcv_dropped_packets": 112,
+      "rcv_drop_events": 83,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 165.85,
+      "rtt_ms": null,
+      "connection_state": "connected"
+    }
+  },
+  "impairment": {
+    "name": "over_budget",
+    "loss_pct": 0.0,
+    "burst_k": 0,
+    "burst_loss_pct": 0.0,
+    "reorder_pct": 0.0,
+    "reorder_delay_ms": 0,
+    "jitter_ms": 300,
+    "base_delay_ms": 20,
+    "blackhole_ms": 0,
+    "blackhole_at_ms": 0
+  },
+  "srt_latency_ms": 20,
+  "srt_latency_us": 20000,
+  "loss_intervals": [],
+  "recoveries": [],
+  "snapshots": [
+    "live.jpg"
+  ]
+}

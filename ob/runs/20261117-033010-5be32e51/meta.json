@@ -1,0 +1,24 @@
+{
+  "run_id": "5be32e51",
+  "started_wall": 1794886210.7430997,
+  "impairment": {
+    "name": "outage",
+    "loss_pct": 0.5,
+    "burst_k": 0,
+    "burst_loss_pct": 0.0,
+    "reorder_pct": 0.0,
+    "reorder_delay_ms": 0,
+    "jitter_ms": 0,
+    "base_delay_ms": 0,
+    "blackhole_ms": 6000,
+    "blackhole_at_ms": 2000
+  },
+  "srt_latency_ms": 200,
+  "srt_latency_us": 200000,
+  "pacer_bytes": 600000,
+  "pacer_media_s": 3.01,
+  "resolution": "1280x720",
+  "fps": 25,
+  "video_bitrate": "1500k",
+  "audio_bitrate": "96k"
+}

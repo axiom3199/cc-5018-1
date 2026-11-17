@@ -19,17 +19,19 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ob import config
-from ob.contract import build_impairment, recovery_contract
+from ob.config import PROFILES, Impairment
+from ob.contract import PACER_BYTES_DEFAULT, validate_latency_ms
 from ob.pipeline import Pipeline
 from ob.frameparse import join_latency
+from ob.evidence import evidence_brief
 
 
 def run_one(profile_name, duration, srt_latency, unbounded=False,
-            pacer_bytes=config.PACER_BYTES_DEFAULT):
-    imp = build_impairment(profile_name)
+            pacer_bytes=PACER_BYTES_DEFAULT):
+    srt_latency = validate_latency_ms(srt_latency)
+    imp = Impairment(**PROFILES[profile_name].to_dict())
     pipe = Pipeline(imp, srt_latency, pacer_bytes, duration_s=duration,
                     unbounded=unbounded)
-    facts = recovery_contract(srt_latency, pacer_bytes, imp, unbounded)
     pipe.start()
     try:
         time.sleep(duration)
@@ -49,9 +51,6 @@ def run_one(profile_name, duration, srt_latency, unbounded=False,
     res = {
         "profile": profile_name,
         "srt_latency_ms": srt_latency,
-        "srt_latency_us": srt_latency * 1000,
-        "pacer_media_s": facts["pacer_media_s"],
-        "recoverable_media_loss_ms": facts["recoverable_media_loss_ms"],
         "bounded_queue": not unbounded,
         "run_id": pipe.run_id,
         "run_dir": str(pipe.run_dir),
@@ -90,12 +89,9 @@ def run_one(profile_name, duration, srt_latency, unbounded=False,
     res["pacer_queue_peak_bytes"] = max(
         (s.get("pacer_queue_bytes", 0) for s in pipe.stats.series),
         default=0)
-    # measured recovery / loss interval from the same evidence the page shows
-    status = pipe.status()
-    res["recovery"] = {
-        k: status["recovery"][k] for k in (
-            "loss_interval_s", "recovery_s", "interruptions",
-            "largest_gap", "errors")}
+    # Evidence a recovery claim can be checked against: the loss interval (no
+    # decoded picture) and the time to restore the session and the picture.
+    res.update(evidence_brief(pipe.run_dir))
     # resource envelope from /proc samples
     rsrc = pipe.stats.resources
     if rsrc:

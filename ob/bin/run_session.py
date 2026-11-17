@@ -15,20 +15,20 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ob import config
-from ob.contract import ContractError, build_impairment, recovery_contract
+from ob.config import PROFILES, Impairment
+from ob.contract import (LATENCY_MS_DEFAULT, PACER_BYTES_DEFAULT,
+                         validate_impairment_fields, validate_latency_ms,
+                         validate_pacer_bytes)
 from ob.pipeline import Pipeline
 
 
 def main():
     ap = argparse.ArgumentParser(description="OB SRT return-link session")
-    ap.add_argument("--profile", choices=sorted(config.PROFILES),
-                    default="healthy")
+    ap.add_argument("--profile", choices=sorted(PROFILES), default="healthy")
     ap.add_argument("--duration", type=float, default=30)
-    ap.add_argument("--srt-latency", type=int,
-                    default=config.SRT_LATENCY_MS_DEFAULT,
-                    metavar="MS", help="SRT TSBPD budget in milliseconds")
-    ap.add_argument("--pacer-bytes", type=int,
-                    default=config.PACER_BYTES_DEFAULT)
+    ap.add_argument("--srt-latency", type=int, default=LATENCY_MS_DEFAULT,
+                    help="SRT TSBPD budget in ms (converted to us for the URL)")
+    ap.add_argument("--pacer-bytes", type=int, default=PACER_BYTES_DEFAULT)
     ap.add_argument("--unbounded", action="store_true",
                     help="disable bounded queue (comparison experiment only)")
     ap.add_argument("--loss", type=float, default=None,
@@ -37,15 +37,24 @@ def main():
                     help="override jitter ms")
     args = ap.parse_args()
 
+    imp: Impairment = Impairment(**PROFILES[args.profile].to_dict())
+    overrides = {}
+    if args.loss is not None:
+        overrides["loss_pct"] = args.loss
+    if args.jitter is not None:
+        overrides["jitter_ms"] = args.jitter
     try:
-        imp = build_impairment(args.profile, {
-            "loss_pct": args.loss, "jitter_ms": args.jitter})
-        pipe = Pipeline(imp, args.srt_latency, args.pacer_bytes,
-                        duration_s=args.duration, unbounded=args.unbounded)
-    except ContractError as exc:
+        latency = validate_latency_ms(args.srt_latency)
+        pacer_bytes = validate_pacer_bytes(
+            args.pacer_bytes, unbounded=args.unbounded)
+        overrides = validate_impairment_fields(overrides)
+    except ValueError as exc:
         ap.error(str(exc))
-    facts = recovery_contract(args.srt_latency, args.pacer_bytes, imp,
-                              args.unbounded)
+    for key, val in overrides.items():
+        setattr(imp, key, val)
+
+    pipe = Pipeline(imp, latency, pacer_bytes,
+                    duration_s=args.duration, unbounded=args.unbounded)
     stop = {"v": False}
 
     def handler(signum, frame):
@@ -55,10 +64,6 @@ def main():
 
     pipe.start()
     print(f"[run] run_id={pipe.run_id} dir={pipe.run_dir} profile={args.profile}")
-    print(f"[contract] latency {facts['srt_latency_ms']} ms "
-          f"-> {facts['srt_latency_us']} us; pacer {facts['pacer_bytes']} B "
-          f"(~{facts['pacer_media_s']} s media); "
-          f"recoverable contiguous loss < {facts['recoverable_media_loss_ms']} ms")
     deadline = time.monotonic() + args.duration
     try:
         while not stop["v"] and time.monotonic() < deadline:
@@ -79,16 +84,12 @@ def main():
         print("\n=== session summary ===")
         for k, v in summary.items():
             print(f"{k}: {v}")
-        rec = pipe.status()["recovery"]
-        print(f"recovery_s: {rec['recovery_s']} "
-              f"loss_interval_s: {rec['loss_interval_s']} "
-              f"largest_frame_gap_s: "
-              f"{rec['largest_gap']['duration_s'] if rec['largest_gap'] else None}")
-        if rec["errors"]:
-            print("recovery evidence errors:")
-            for err in rec["errors"]:
-                print(f"  - {err}")
+        from ob.evidence import evidence_brief
+        ev = evidence_brief(pipe.run_dir)
+        print(f"max_loss_interval_s: {ev['max_loss_interval_s']}")
+        print(f"max_picture_recovery_s: {ev['max_picture_recovery_s']}")
         print(f"artifacts: {pipe.run_dir}")
+        print("现场请用控制页（bin/ob.sh web）启停发送、调整丢包并核对画面/恢复延迟")
 
 
 if __name__ == "__main__":

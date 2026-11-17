@@ -1,0 +1,163 @@
+{
+  "elapsed_s": 26.0,
+  "frames_decoded": 171,
+  "drop_packets": 414,
+  "drop_bytes": 77832,
+  "drops_by_reason": {
+    "timeline_reset": 78,
+    "session_reconnect": 336
+  },
+  "events": 22,
+  "e2e_ms_avg": 587.7,
+  "e2e_ms_p50": 578.2,
+  "e2e_ms_p95": 738.7,
+  "e2e_ms_max": 5250.1,
+  "run_id": "33f7c7e9",
+  "run_dir": "/workspace/ob/runs/20261117-040052-33f7c7e9",
+  "frame_gaps": 0,
+  "processes": {
+    "receiver": {
+      "pid": 13946,
+      "alive": false,
+      "rc": -9
+    },
+    "gateway": {
+      "pid": 14009,
+      "alive": false,
+      "rc": -9
+    },
+    "encoder": {
+      "pid": 13944,
+      "alive": true,
+      "rc": null
+    }
+  },
+  "pacer": {
+    "queue_bytes": 7332,
+    "max_bytes": 600000,
+    "bounded": true,
+    "bytes_in": 2918700,
+    "bytes_out": 2833536,
+    "bytes_dropped": 77832,
+    "write_stall_events": 1,
+    "pipe_broken": false,
+    "alive": false
+  },
+  "relay": {
+    "fwd": {
+      "in": 2167,
+      "sent": 1307,
+      "drop_random": 2,
+      "drop_burst": 0,
+      "drop_blackhole": 858,
+      "reordered": 0,
+      "queued": 0
+    },
+    "rev": {
+      "in": 61,
+      "sent": 55,
+      "drop_random": 0,
+      "drop_burst": 0,
+      "drop_blackhole": 6,
+      "reordered": 0,
+      "queued": 0
+    },
+    "state_bad": false,
+    "peer": "('127.0.0.1', 47167)"
+  },
+  "srt": {
+    "gateway": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "idle"
+    },
+    "receiver": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "connected"
+    }
+  },
+  "impairment": {
+    "name": "outage",
+    "loss_pct": 0.5,
+    "burst_k": 0,
+    "burst_loss_pct": 0.0,
+    "reorder_pct": 0.0,
+    "reorder_delay_ms": 0,
+    "jitter_ms": 0,
+    "base_delay_ms": 0,
+    "blackhole_ms": 6000,
+    "blackhole_at_ms": 2000
+  },
+  "srt_latency_ms": 200,
+  "srt_latency_us": 200000,
+  "loss_intervals": [
+    {
+      "start_wall": 1794888054.761507,
+      "end_wall": 1794888059.6833339,
+      "duration_s": 4.922,
+      "missing_frames": 0,
+      "media_skipped_s": 0.0,
+      "from_elapsed": 2.16,
+      "to_elapsed": 7.082,
+      "from_epoch": [
+        "33f7c7e9",
+        0
+      ],
+      "to_epoch": [
+        "33f7c7e9",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794888059.6842248,
+      "end_wall": 1794888063.2259114,
+      "duration_s": 3.542,
+      "missing_frames": null,
+      "media_skipped_s": null,
+      "from_elapsed": 7.083,
+      "to_elapsed": 10.625,
+      "from_epoch": [
+        "33f7c7e9",
+        0
+      ],
+      "to_epoch": [
+        "33f7c7e9",
+        1
+      ],
+      "missing_frames_estimate": 88
+    }
+  ],
+  "recoveries": [
+    {
+      "index": 0,
+      "interruption_elapsed": 7.231,
+      "session_restored_elapsed": 10.266,
+      "session_restore_s": 3.035,
+      "first_frame_elapsed": 10.625,
+      "picture_recovery_s": 3.391,
+      "loss_interval_s": 3.542,
+      "from_epoch": [
+        "33f7c7e9",
+        0
+      ],
+      "to_epoch": [
+        "33f7c7e9",
+        1
+      ],
+      "media_generation_before": 0,
+      "media_generation_after": 1
+    }
+  ],
+  "snapshots": [
+    "live.jpg"
+  ]
+}

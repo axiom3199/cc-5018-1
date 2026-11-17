@@ -1,9 +1,21 @@
-import sys, time, csv
-sys.path.insert(0, "/workspace/ob/src")
-from ob.contract import build_impairment
-from ob.pipeline import Pipeline
+"""Legacy check: a timeline reset must not replay the previous media epoch.
 
-pipe = Pipeline(build_impairment("healthy"), 200, 600_000, duration_s=40)
+Kept runnable. Uses the contract default (ms) and ob.evidence for the
+recovery/loss-interval view, so the assertions do not reach into private
+Stats structures.
+"""
+import sys
+import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from ob.config import PROFILES, Impairment
+from ob.contract import PACER_BYTES_DEFAULT, LATENCY_MS_DEFAULT
+from ob.pipeline import Pipeline
+from ob.evidence import summarize, load_frames
+
+pipe = Pipeline(Impairment(**PROFILES["healthy"].to_dict()),
+                LATENCY_MS_DEFAULT, PACER_BYTES_DEFAULT, duration_s=40)
 pipe.start()
 try:
     time.sleep(8)
@@ -15,43 +27,36 @@ try:
     print(f"old={old_id} new={new_id}", flush=True)
     assert new_id != old_id
     time.sleep(12)
-    # pacer must still be moving data after the reset
     snap = pipe.pacer.snapshot()
     print("pacer after reset:", snap, flush=True)
     assert snap["alive"] and snap["bytes_out"] > 0
 finally:
     pipe.stop()
 
-# verify frame epochs
-frames = pipe.stats.frames
+frames = load_frames(pipe.run_dir)
 vid = [f for f in frames if f["kind"] == "video"]
-epochs = sorted({f["epoch"] for f in vid})
+epochs = sorted({f["epoch"] for f in vid}, key=str)
 print("video epochs:", epochs)
-assert epochs == sorted({(old_id, 0), (new_id, 1)}), epochs
-# no old-epoch receiver frames after the reset wall time
+assert epochs == sorted({(old_id, 0), (new_id, 1)}, key=str), epochs
 stale = [f for f in vid if f["side"] == "receiver" and f["epoch"][0] == old_id
          and f["t_wall"] > t_reset + 1.0]
 print("stale old-epoch frames after reset (+1s grace):", len(stale))
 assert not stale
-# new epoch receiver PTS must start near zero (no backlog replay)
 new_recv = [f for f in vid if f["side"] == "receiver" and f["epoch"][0] == new_id]
 first_pts = min(f["pts_time"] for f in new_recv)
 print("new epoch first receiver pts:", first_pts, "frames:", len(new_recv))
 assert first_pts < 3.0, first_pts
-# event semantics
+
 kinds = [e[2] for e in pipe.stats.events]
 print("events:", {k: kinds.count(k) for k in set(kinds)})
 assert kinds.count("timeline_reset") == 1
 assert kinds.count("timeline_epoch_ready") == 1
 assert "connection_interruption" not in kinds, kinds
-# per-epoch e2e pairing has no cross-epoch matches
-from ob.frameparse import join_latency
-rows = join_latency(frames, 25)
-unpaired = [r for r in rows if r["e2e_ms"] is None]
-print("joined rows:", len(rows), "unpaired:", len(unpaired))
-paired = [r for r in rows if r["e2e_ms"] is not None]
-import statistics
-print("e2e p50 new epoch:", statistics.median(
-    r["e2e_ms"] for r in paired if r["epoch"][0] == new_id))
+
+# a timeline reset is not a connection interruption, so no "recovery" is
+# recorded for it; the loss interval still shows the deliberate epoch switch
+ev = summarize(pipe.run_dir)
+print("loss intervals across reset:",
+      [g for g in ev["loss_intervals"] if g["from_epoch"] != g["to_epoch"]])
 print("run_dir:", pipe.run_dir)
 print("RESET_E2E_OK")

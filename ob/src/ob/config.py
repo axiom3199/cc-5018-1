@@ -1,19 +1,6 @@
-"""Single source of truth for the OB return-link configuration contract.
-
-Units are declared next to every value because two of them were historically
-mixed up:
-
-* SRT ``latency`` on the ffmpeg URL is **microseconds** (libsrt TSBPD).  The
-  operator-facing CLI / web form is in **milliseconds**; the conversion happens
-  exactly once, in ``Pipeline._gateway_cmd`` / ``_receiver_cmd``.
-* The bounded pacer queue is in **bytes** of MPEG-TS (188-byte packets).
-
-Values here are defaults for the control page and CLI; every one of them can be
-overridden at start time, and overrides are validated against the ranges below
-by ``ob.contract``.  No caller may silently substitute a default for an invalid
-or unknown value.
-"""
-from dataclasses import dataclass, asdict
+"""Global configuration and impairment profiles for the OB return-link prototype."""
+import os
+from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]      # /workspace (shared tools)
@@ -21,7 +8,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]  # /workspace/ob
 FFMPEG = str(ROOT / "tools" / "ffmpeg")
 FFPROBE = str(ROOT / "tools" / "ffprobe")
 RUNS_DIR = PROJECT_ROOT / "runs"
-EVIDENCE_DIR = PROJECT_ROOT / "evidence"
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf"
 
 # ---- A/V envelope (declared resource range applies at these settings) ----
@@ -32,50 +18,29 @@ AUDIO_BITRATE = "96k"
 SAMPLE_RATE = 48000
 
 # ---- Network plumbing (all loopback in this single-host prototype) ----
-# encoder -> pacer(stdin/out) -> srt_gateway(caller to RELAY_IN_PORT)
-# impairment relay listens RELAY_IN_PORT and forwards to the receiver's listener
-SRT_RECEIVER_PORT = 19001   # receiver's SRT listener (studio side)
-RELAY_IN_PORT = 19002       # impairment relay input (gateway's SRT target)
+# gateway (SRT caller) -> srt://127.0.0.1:PROXY_IN
+# impairment relay binds PROXY_IN and forwards datagrams to GATEWAY_UDP
+# receiver (SRT listener) binds srt://0.0.0.0:GATEWAY_UDP
+GATEWAY_UDP = 19001      # receiver SRT listener port / relay output target
+PROXY_IN = 19002         # impairment relay input / gateway caller target
 WEB_PORT = 8080
 
-# ---- SRT timing / retransmission contract ----
-# ffmpeg passes srt://...&latency=<int64> straight to libsrt as MICROSECONDS.
-# 200 ms is the operator-facing default; accepted range is deliberately narrow
-# enough to stay a live-return link (20 ms .. 8 s).
+# ---- Latency / queue bounds ----
+# Operator/CLI/UI surfaces are MILLISECONDS. libsrt's `latency=` URL option is
+# MICROSECONDS; ob.contract.srt_latency_us() is the one conversion point.
 SRT_LATENCY_MS_DEFAULT = 200
 SRT_LATENCY_MS_MIN = 20
 SRT_LATENCY_MS_MAX = 8000
-# The peer idle timeout is disabled (-1 ms) so a blackhole does not kill the
-# session from the socket side; if a peer still exits, supervise_srt() rebuilds
-# the session.  This libsrt build exposes no keepalive option through ffmpeg.
-SRT_PEERIDLE_TIMEOUT_MS = -1
-SRT_CONNECT_TIMEOUT_MS = 3000
-
-# Bounded pacer queue: 600 000 B of MPEG-TS.  With the declared envelope
-# (1.5 Mbps video + 96 kbps audio + TS overhead ~= 1.6 Mbps ~= 200 kB/s) that is
-# about 3.0 s of media, not 0.4 s.
+# This libsrt build silently ignores keepidle/keepinterval query options and
+# ffmpeg exposes no keepalive socket option, so these are inert hooks only. Do
+# not claim they keep a long blackhole alive: supervise_srt() rebuilds instead.
+SRT_KEEP_IDLE_MS = 60_000
+SRT_KEEP_INTERVAL_MS = 1_000
+SRT_KEEP_COUNT = 30
+# 600000 bytes at ~1.6 Mbps (video+audio+TS overhead) is ~3.0 s of media,
+# not 0.4 s. The queue is a live-edge bound, not a latency budget.
 PACER_BYTES_DEFAULT = 600_000
-PACER_BYTES_MIN = 188 * 10          # at least 10 TS packets
-PACER_BYTES_MAX = 64 * 1024 * 1024
-SNAPSHOT_INTERVAL = 1.0             # receiver jpeg snapshot every second
-
-# Supported ranges for every impairment knob (inclusive).  ``ob.contract``
-# rejects values outside them instead of clamping, so a typo cannot masquerade
-# as a working weak-network scenario.
-IMPAIRMENT_RANGES = {
-    "loss_pct": (0.0, 100.0),
-    "burst_k": (0, 100),
-    "burst_loss_pct": (0.0, 95.0),
-    "reorder_pct": (0.0, 100.0),
-    "reorder_delay_ms": (0, 2000),
-    "jitter_ms": (0, 2000),
-    "base_delay_ms": (0, 5000),
-    "blackhole_ms": (0, 3_600_000),
-    "blackhole_at_ms": (0, 3_600_000),
-}
-
-INT_IMPAIRMENT_FIELDS = ("burst_k", "reorder_delay_ms", "jitter_ms",
-                         "base_delay_ms", "blackhole_ms", "blackhole_at_ms")
+SNAPSHOT_INTERVAL = 1.0           # receiver jpeg snapshot every second
 
 
 @dataclass
@@ -108,12 +73,4 @@ PROFILES = {
                          reorder_delay_ms=120),
     "outage": Impairment("outage", blackhole_ms=15_000, blackhole_at_ms=8_000,
                          loss_pct=0.5),
-    # Short outage (1.2 s) used by the latency-maintenance check: it is longer
-    # than a 250 ms budget (loss permanent) but shorter than a 2 s budget
-    # (SRT can retransmit the withheld packets and the picture continues).
-    "short_outage": Impairment("short_outage", blackhole_ms=1_200,
-                               blackhole_at_ms=4_000),
-    # Loss pattern too long for a small budget to repair (see check_latency).
-    "burst_over_budget": Impairment("burst_over_budget", burst_k=32,
-                                    burst_loss_pct=55.0, loss_pct=2.0),
 }

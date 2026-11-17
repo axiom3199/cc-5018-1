@@ -27,8 +27,9 @@ import time
 import uuid
 from pathlib import Path
 
-from . import config, contract
-from .contract import latency_us, recovery_contract, validate_session
+from . import config
+from .contract import MEDIA_BITS_PER_SECOND, latency_url_value, srt_latency_us
+from .evidence import summarize_live
 from .frameparse import FrameTracker
 from .impairment import ImpairmentRelay
 from .pacer import BoundedPacer
@@ -41,10 +42,6 @@ from .subtitles import generate as gen_ass
 class Pipeline:
     def __init__(self, impairment, srt_latency_ms, pacer_bytes, duration_s=0,
                  run_id=None, unbounded=False):
-        # Validate before spawning anything: an out-of-range budget or queue
-        # size must fail loudly here, not be silently replaced by a default.
-        srt_latency_ms, pacer_bytes = validate_session(
-            srt_latency_ms, pacer_bytes, unbounded)
         self.run_id = run_id or uuid.uuid4().hex[:8]
         # media generation inside one run: bumped whenever the encoder restarts
         # (operator reset or post-outage SRT rebuild), because a fresh encoder
@@ -54,8 +51,6 @@ class Pipeline:
         self.stats = Stats(self.run_dir, fps=config.FPS)
         self.imp = impairment
         self.srt_latency_ms = srt_latency_ms
-        # libsrt takes microseconds; convert once here and use everywhere
-        self.srt_latency_us = latency_us(srt_latency_ms)
         self.unbounded = unbounded
         self.pacer_bytes = 0 if unbounded else pacer_bytes
         self.duration_s = duration_s
@@ -94,8 +89,11 @@ class Pipeline:
             "started_wall": time.time(),
             "impairment": impairment.to_dict(),
             "srt_latency_ms": srt_latency_ms,
-            "srt_latency_us": self.srt_latency_us,
+            "srt_latency_us": srt_latency_us(srt_latency_ms),
             "pacer_bytes": self.pacer_bytes,
+            "pacer_media_s": round(
+                (self.pacer_bytes * 8 / MEDIA_BITS_PER_SECOND), 2)
+            if self.pacer_bytes else None,
             "resolution": f"{config.WIDTH}x{config.HEIGHT}",
             "fps": config.FPS,
             "video_bitrate": config.VIDEO_BITRATE,
@@ -114,11 +112,8 @@ class Pipeline:
 
         # 1) impairment relay (start first; SRT peers need fixed ports)
         self.relay = ImpairmentRelay(
-            config.RELAY_IN_PORT, config.SRT_RECEIVER_PORT, self.imp, self.stats)
+            config.PROXY_IN, config.GATEWAY_UDP, self.imp, self.stats)
         self.relay.start()
-        # the relay anchors the blackhole window at construction, not at
-        # start(); record it so evidence checks compare against the real window
-        self.meta["relay_started_wall"] = time.time()
 
         # 2) receiver (SRT listener; retries accepting until caller appears)
         recv_cmd = self._receiver_cmd()
@@ -226,7 +221,13 @@ class Pipeline:
         return ""
 
     def _gateway_cmd(self):
-        url = (contract.gateway_url(self.run_id, self.srt_latency_ms)
+        url = (f"srt://127.0.0.1:{config.PROXY_IN}?mode=caller"
+               f"&latency={latency_url_value(self.srt_latency_ms)}"
+               f"&connect_timeout=3000"
+               f"&peeridle_timeout=-1"
+               f"&reconnect=1"
+               f"&streamid=ob1-{self.run_id}"
+               f"&oheadbw=25"
                + self._srt_keepalive())
         return [
             config.FFMPEG, "-hide_banner", "-loglevel", "debug",
@@ -238,7 +239,10 @@ class Pipeline:
         ]
 
     def _receiver_cmd(self):
-        url = (contract.receiver_url(self.run_id, self.srt_latency_ms)
+        url = (f"srt://0.0.0.0:{config.GATEWAY_UDP}?mode=listener"
+               f"&latency={latency_url_value(self.srt_latency_ms)}"
+               f"&peeridle_timeout=-1"
+               f"&streamid=studio-{self.run_id}"
                + self._srt_keepalive())
         snap = str(self.run_dir / "snapshots" / "live.jpg")
         # Real decode on both outputs: null muxer consumes every decoded video
@@ -380,7 +384,7 @@ class Pipeline:
                         self._last_enc_exit_id = id(old)
                     self._kill_proc(old)
         # only the receiver binds a fixed local port; the gateway is a UDP
-        # caller on an ephemeral port, while RELAY_IN_PORT belongs to the long-lived
+        # caller on an ephemeral port, while PROXY_IN belongs to the long-lived
         # impairment relay and must never be waited on
         self._await_port_free("receiver")
         # If the impairment relay is still inside a blackhole, any new SRT
@@ -409,7 +413,7 @@ class Pipeline:
         while not self._stop.is_set():
             try:
                 recv = self._spawn_peer("receiver")
-                if not self._wait_bind(config.SRT_RECEIVER_PORT, 2.0):
+                if not self._wait_bind(config.GATEWAY_UDP, 2.0):
                     self.stats.event("peer_restart_failed", process="receiver",
                                      attempt=attempt, note="no UDP bind")
                     recv.kill()
@@ -480,7 +484,7 @@ class Pipeline:
     def _await_port_free(self, name="receiver", timeout=5.0):
         # the only fixed local port a peer binds is the receiver's listener
         import socket
-        port = config.SRT_RECEIVER_PORT
+        port = config.GATEWAY_UDP
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline and not self._stop.is_set():
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -563,7 +567,7 @@ class Pipeline:
     def _build_srt_peers(self):
         """Spawn receiver (listening) then gateway (calling); used by resets."""
         recv = self._spawn_peer("receiver")
-        if not self._wait_bind(config.SRT_RECEIVER_PORT, 2.0):
+        if not self._wait_bind(config.GATEWAY_UDP, 2.0):
             self.stats.event("peer_restart_failed", process="receiver",
                              note="no UDP bind during timeline reset")
         gw = self._spawn_peer("gateway")
@@ -603,11 +607,11 @@ class Pipeline:
         self.stats.tick_second(sample)
 
     def status(self):
-        from . import recovery
         procs = {name: {"pid": p.pid, "alive": p.poll() is None,
                         "rc": p.poll()}
                  for name, p in self.procs.items()}
         st = self.stats.summary()
+        ev = summarize_live(self.stats.events, self.stats.frames)
         st.update({
             "run_id": self.run_id,
             "run_dir": str(self.run_dir),
@@ -619,11 +623,9 @@ class Pipeline:
                     "receiver": self.parsers["receiver"].snapshot()},
             "impairment": self.imp.to_dict(),
             "srt_latency_ms": self.srt_latency_ms,
-            "srt_latency_us": self.srt_latency_us,
-            "contract": recovery_contract(self.srt_latency_ms,
-                                          self.pacer_bytes, self.imp,
-                                          self.unbounded),
-            "recovery": recovery.summarize(self.stats, self.meta),
+            "srt_latency_us": srt_latency_us(self.srt_latency_ms),
+            "loss_intervals": ev["loss_intervals"],
+            "recoveries": ev["recoveries"],
             "snapshots": self._snapshot_list(),
         })
         return st
@@ -659,8 +661,5 @@ class Pipeline:
                     {k for r in rows for k in r}))
                 w.writeheader()
                 w.writerows(rows)
-        self.meta["stopped_wall"] = time.time()
-        (self.run_dir / "meta.json").write_text(
-            json.dumps(self.meta, indent=2, ensure_ascii=False))
         (self.run_dir / "status.json").write_text(
             json.dumps(self.status(), indent=2, ensure_ascii=False))

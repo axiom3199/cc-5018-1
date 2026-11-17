@@ -1,0 +1,682 @@
+{
+  "elapsed_s": 38.2,
+  "frames_decoded": 205,
+  "drop_packets": 0,
+  "drop_bytes": 0,
+  "drops_by_reason": {},
+  "events": 31,
+  "e2e_ms_avg": 482.3,
+  "e2e_ms_p50": 420.3,
+  "e2e_ms_p95": 606.2,
+  "e2e_ms_max": 5214.7,
+  "run_id": "512233b5",
+  "run_dir": "/workspace/ob/runs/20261117-031313-512233b5",
+  "frame_gaps": 0,
+  "processes": {
+    "receiver": {
+      "pid": 6088,
+      "alive": false,
+      "rc": 0
+    },
+    "gateway": {
+      "pid": 6093,
+      "alive": false,
+      "rc": -9
+    },
+    "encoder": {
+      "pid": 5949,
+      "alive": true,
+      "rc": null
+    }
+  },
+  "pacer": {
+    "queue_bytes": 3332792,
+    "max_bytes": 0,
+    "bounded": false,
+    "bytes_in": 6476036,
+    "bytes_out": 3143244,
+    "bytes_dropped": 0,
+    "write_stall_events": 287,
+    "pipe_broken": false,
+    "alive": false
+  },
+  "relay": {
+    "fwd": {
+      "in": 2423,
+      "sent": 1528,
+      "drop_random": 5,
+      "drop_burst": 0,
+      "drop_blackhole": 890,
+      "reordered": 0,
+      "queued": 0
+    },
+    "rev": {
+      "in": 87,
+      "sent": 80,
+      "drop_random": 1,
+      "drop_burst": 0,
+      "drop_blackhole": 6,
+      "reordered": 0,
+      "queued": 0
+    },
+    "state_bad": false,
+    "peer": "('127.0.0.1', 53732)"
+  },
+  "srt": {
+    "gateway": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "broken"
+    },
+    "receiver": {
+      "rcv_dropped_packets": 0,
+      "rcv_drop_events": 0,
+      "nak_events": 0,
+      "max_reorder_distance": 0,
+      "max_late_ms": 0.0,
+      "rtt_ms": null,
+      "connection_state": "connected"
+    }
+  },
+  "impairment": {
+    "name": "outage",
+    "loss_pct": 0.5,
+    "burst_k": 0,
+    "burst_loss_pct": 0.0,
+    "reorder_pct": 0.0,
+    "reorder_delay_ms": 0,
+    "jitter_ms": 0,
+    "base_delay_ms": 0,
+    "blackhole_ms": 15000,
+    "blackhole_at_ms": 8000
+  },
+  "srt_latency_ms": 200,
+  "srt_latency_us": 200000,
+  "loss_intervals": [
+    {
+      "start_wall": 1794885194.537193,
+      "end_wall": 1794885194.775154,
+      "duration_s": 0.238,
+      "missing_frames": 5,
+      "from_elapsed": 0.712,
+      "to_elapsed": 0.95,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885194.8170147,
+      "end_wall": 1794885194.9815185,
+      "duration_s": 0.165,
+      "missing_frames": 3,
+      "from_elapsed": 0.992,
+      "to_elapsed": 1.156,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885195.0145817,
+      "end_wall": 1794885195.2169757,
+      "duration_s": 0.202,
+      "missing_frames": 4,
+      "from_elapsed": 1.189,
+      "to_elapsed": 1.392,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885195.256342,
+      "end_wall": 1794885195.4528146,
+      "duration_s": 0.196,
+      "missing_frames": 4,
+      "from_elapsed": 1.431,
+      "to_elapsed": 1.628,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885195.456335,
+      "end_wall": 1794885195.6910517,
+      "duration_s": 0.235,
+      "missing_frames": 5,
+      "from_elapsed": 1.631,
+      "to_elapsed": 1.866,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885195.6960564,
+      "end_wall": 1794885195.9403946,
+      "duration_s": 0.244,
+      "missing_frames": 5,
+      "from_elapsed": 1.871,
+      "to_elapsed": 2.115,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885195.9720674,
+      "end_wall": 1794885196.183202,
+      "duration_s": 0.211,
+      "missing_frames": 4,
+      "from_elapsed": 2.147,
+      "to_elapsed": 2.358,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885196.1958206,
+      "end_wall": 1794885196.4219499,
+      "duration_s": 0.226,
+      "missing_frames": 5,
+      "from_elapsed": 2.371,
+      "to_elapsed": 2.597,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885196.4364874,
+      "end_wall": 1794885196.6226768,
+      "duration_s": 0.186,
+      "missing_frames": 4,
+      "from_elapsed": 2.611,
+      "to_elapsed": 2.798,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885196.6630528,
+      "end_wall": 1794885196.854809,
+      "duration_s": 0.192,
+      "missing_frames": 4,
+      "from_elapsed": 2.838,
+      "to_elapsed": 3.03,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885196.8585298,
+      "end_wall": 1794885196.9288204,
+      "duration_s": 0.07,
+      "missing_frames": 1,
+      "from_elapsed": 3.033,
+      "to_elapsed": 3.104,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885196.9288204,
+      "end_wall": 1794885197.0956645,
+      "duration_s": 0.167,
+      "missing_frames": 3,
+      "from_elapsed": 3.104,
+      "to_elapsed": 3.271,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885197.098811,
+      "end_wall": 1794885197.335559,
+      "duration_s": 0.237,
+      "missing_frames": 5,
+      "from_elapsed": 3.274,
+      "to_elapsed": 3.51,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885197.3749511,
+      "end_wall": 1794885197.5715032,
+      "duration_s": 0.197,
+      "missing_frames": 4,
+      "from_elapsed": 3.55,
+      "to_elapsed": 3.746,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885197.5763922,
+      "end_wall": 1794885197.8155882,
+      "duration_s": 0.239,
+      "missing_frames": 5,
+      "from_elapsed": 3.751,
+      "to_elapsed": 3.99,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885197.8212152,
+      "end_wall": 1794885198.011062,
+      "duration_s": 0.19,
+      "missing_frames": 4,
+      "from_elapsed": 3.996,
+      "to_elapsed": 4.186,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885198.0530589,
+      "end_wall": 1794885198.253901,
+      "duration_s": 0.201,
+      "missing_frames": 4,
+      "from_elapsed": 4.228,
+      "to_elapsed": 4.429,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885198.2936194,
+      "end_wall": 1794885198.491312,
+      "duration_s": 0.198,
+      "missing_frames": 4,
+      "from_elapsed": 4.468,
+      "to_elapsed": 4.666,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885198.5751476,
+      "end_wall": 1794885198.7319531,
+      "duration_s": 0.157,
+      "missing_frames": 3,
+      "from_elapsed": 4.75,
+      "to_elapsed": 4.907,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885198.7720652,
+      "end_wall": 1794885198.9804206,
+      "duration_s": 0.208,
+      "missing_frames": 4,
+      "from_elapsed": 4.947,
+      "to_elapsed": 5.155,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885198.9860566,
+      "end_wall": 1794885199.2144103,
+      "duration_s": 0.228,
+      "missing_frames": 5,
+      "from_elapsed": 5.161,
+      "to_elapsed": 5.389,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885199.25405,
+      "end_wall": 1794885199.4553905,
+      "duration_s": 0.201,
+      "missing_frames": 4,
+      "from_elapsed": 5.429,
+      "to_elapsed": 5.63,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885199.4588797,
+      "end_wall": 1794885199.6918087,
+      "duration_s": 0.233,
+      "missing_frames": 5,
+      "from_elapsed": 5.634,
+      "to_elapsed": 5.867,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885199.6964195,
+      "end_wall": 1794885199.894109,
+      "duration_s": 0.198,
+      "missing_frames": 4,
+      "from_elapsed": 5.871,
+      "to_elapsed": 6.069,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885199.8981738,
+      "end_wall": 1794885200.0112925,
+      "duration_s": 0.113,
+      "missing_frames": 2,
+      "from_elapsed": 6.073,
+      "to_elapsed": 6.186,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885200.0112925,
+      "end_wall": 1794885200.138358,
+      "duration_s": 0.127,
+      "missing_frames": 2,
+      "from_elapsed": 6.186,
+      "to_elapsed": 6.313,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885200.1791086,
+      "end_wall": 1794885200.4134285,
+      "duration_s": 0.234,
+      "missing_frames": 5,
+      "from_elapsed": 6.354,
+      "to_elapsed": 6.588,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885200.4223382,
+      "end_wall": 1794885200.6114867,
+      "duration_s": 0.189,
+      "missing_frames": 4,
+      "from_elapsed": 6.597,
+      "to_elapsed": 6.786,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885200.6162322,
+      "end_wall": 1794885200.8571613,
+      "duration_s": 0.241,
+      "missing_frames": 5,
+      "from_elapsed": 6.791,
+      "to_elapsed": 7.032,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885200.8598318,
+      "end_wall": 1794885201.099954,
+      "duration_s": 0.24,
+      "missing_frames": 5,
+      "from_elapsed": 7.035,
+      "to_elapsed": 7.275,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885201.1053834,
+      "end_wall": 1794885201.3358994,
+      "duration_s": 0.231,
+      "missing_frames": 5,
+      "from_elapsed": 7.28,
+      "to_elapsed": 7.511,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885201.340898,
+      "end_wall": 1794885201.5706873,
+      "duration_s": 0.23,
+      "missing_frames": 5,
+      "from_elapsed": 7.516,
+      "to_elapsed": 7.746,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885201.614001,
+      "end_wall": 1794885201.7801385,
+      "duration_s": 0.166,
+      "missing_frames": 3,
+      "from_elapsed": 7.789,
+      "to_elapsed": 7.955,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    },
+    {
+      "start_wall": 1794885201.8221002,
+      "end_wall": 1794885206.7379858,
+      "duration_s": 4.916,
+      "missing_frames": 122,
+      "from_elapsed": 7.997,
+      "to_elapsed": 12.913,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": [
+        "512233b5",
+        0
+      ]
+    }
+  ],
+  "recoveries": [
+    {
+      "index": 0,
+      "interruption_elapsed": 739278.016,
+      "session_restored_elapsed": 739290.274,
+      "session_restore_s": 12.258,
+      "first_frame_elapsed": null,
+      "picture_recovery_s": null,
+      "loss_interval_s": null,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": null,
+      "media_generation_before": 0,
+      "media_generation_after": null
+    },
+    {
+      "index": 1,
+      "interruption_elapsed": 739293.487,
+      "session_restored_elapsed": 739295.104,
+      "session_restore_s": 1.617,
+      "first_frame_elapsed": null,
+      "picture_recovery_s": null,
+      "loss_interval_s": null,
+      "from_epoch": [
+        "512233b5",
+        0
+      ],
+      "to_epoch": null,
+      "media_generation_before": 0,
+      "media_generation_after": null
+    }
+  ],
+  "snapshots": [
+    "live.jpg"
+  ]
+}

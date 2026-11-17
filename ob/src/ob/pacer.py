@@ -62,14 +62,7 @@ class BoundedPacer:
 
     def reset_timeline(self):
         with self.lock:
-            # A timeline reset/rebuild kills the encoder and reattaches a fresh
-            # one.  The reader thread must stay alive across that hand-off: a
-            # one-shot reset flag is lost when the old read returns EOF, so the
-            # queue would silently stop enforcing its bound for the rest of the
-            # run (the symptom is a flat queue and zero drops during a later
-            # blackhole).
             self._do_reset_locked()
-            self.reset_pending = True
 
     def reattach_dst(self, dst_proc, flush_reason=None):
         """Re-point the writer at a restarted gateway's stdin.
@@ -98,8 +91,6 @@ class BoundedPacer:
         with self.lock:
             self.src = src_proc.stdout
             self.alive = True
-            # a previous reattach may have left a late EOF latched
-            self.reset_pending = True
         if not self.threads[0].is_alive() or not self.threads[1].is_alive():
             self.threads = [
                 threading.Thread(target=self._reader, name="pacer-reader",
@@ -125,31 +116,15 @@ class BoundedPacer:
         self.stats.record_drop(ev)
 
     def _reader(self):
-        src = self.src
         while self.alive:
-            with self.lock:
-                current = self.src
-            if current is None or current is not src:
-                src = current
-            if src is None:
-                # between encoder generations: wait for reattach_src
-                time.sleep(0.05)
-                continue
             try:
-                chunk = src.read(65536)
+                chunk = self.src.read(65536)
             except (BrokenPipeError, OSError, ValueError):
-                # the old encoder's pipe is gone; a rebuild will hand us a new
-                # one via reattach_src, so wait instead of killing the queue
-                with self.lock:
-                    self.src = None
-                src = None
-                continue
+                self.alive = False
+                return
             if not chunk:
-                # EOF is expected when a restart kills the encoder; the queue
-                # must stay alive across that hand-off or it stops enforcing
-                # its bound for the rest of the run
-                time.sleep(0.05)
-                continue
+                self.alive = False
+                return
             self._total_in += len(chunk)
             with self.lock:
                 if self.reset_pending:

@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 # Reproducible one-shot launcher for the OB SRT return-link prototype.
-# The field return-link entry point is the control page (`web`); the others
-# are headless helpers and maintained checks.
 # Usage:
 #   bin/ob.sh web                 # start the control page (http://0.0.0.0:8080)
 #   bin/ob.sh session [profile] [duration_s] [srt_latency_ms]
 #   bin/ob.sh experiments [duration_s]
-#   bin/ob.sh check-config [--scenario ...]
-#   bin/ob.sh check-latency [--case ...]
-#   bin/ob.sh test                # contract/recovery unit tests
+#   bin/ob.sh check [--skip-run]  # contract maintenance checker
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PY=python3
@@ -30,19 +26,12 @@ case "$cmd" in
     duration="${1:-30}"
     exec "$PY" "$HERE/bin/run_experiments.py" --duration "$duration"
     ;;
-  check-config)
-    exec "$PY" "$HERE/bin/check_config.py" "$@"
-    ;;
-  check-latency)
-    exec "$PY" "$HERE/bin/check_latency.py" "$@"
-    ;;
-  test)
-    cd "$HERE"
-    exec "$PY" -m unittest discover -s tests -v
+  check)
+    exec "$PY" "$HERE/bin/check_contract.py" "$@"
     ;;
   *)
     echo "unknown command: $cmd"
-    echo "use: web | session | experiments | check-config | check-latency | test" >&2
+    echo "use: web | session | experiments | check" >&2
     exit 2
     ;;
 esac
